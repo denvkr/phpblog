@@ -1,0 +1,100 @@
+IpoetryBundle\Entity\IpoetryUserBlogPost:
+    type: entity
+    table: ipoetry_user_blog_post
+    id:
+        ipoetryUserBlogPostId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ipoetry_user_blog_post_id
+            generator:
+                strategy: AUTO
+    fields:
+        ipoetryUserBlogPostParentId:
+            type: integer
+            nullable: false
+            default: 0
+            options:
+                unsigned: false
+            column: ipoetry_user_blog_post_parent_id
+        ipoetryUserBlogPostRatingId:
+            type: integer
+            nullable: false
+            default: 0
+            options:
+                unsigned: false
+            column: ipoetry_blogpost_rating_id
+        ipoetryUserBlogPostPoetryId:
+            type: integer
+            nullable: false
+            default: 0
+            options:
+                unsigned: false
+            column: ipoetry_user_blog_post_poetry_id
+        ipoetryUserBlogPostModerated:
+            type: integer
+            nullable: false
+            default: 0
+            options:
+                unsigned: false
+            column: ipoetry_user_blog_moderated            
+        ipoetryUserBlogPostText:
+            type: mediumtext
+            nullable: true
+            options:
+                fixed: false
+            column: ipoetry_user_blog_post_text
+        ipoetryUserBlogPostTheme:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: ipoetry_user_blog_post_theme
+        ipoetryUserBlogPostCreatedAt:
+            type: datetime
+            nullable: false
+            default: '1970-01-01'
+            options:
+                fixed: false
+            column: ipoetry_user_blog_post_created_at
+        ipoetryUserBlogPostUpdatedAt:
+            type: datetime
+            nullable: false
+            default: '1970-01-01'
+            options:
+                fixed: false
+            column: ipoetry_user_blog_post_updated_at
+    manyToMany:
+        ipoetryUserUser:
+            targetEntity: IpoetryUser
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: 
+            joinTable:
+                name: ipoetry_user_blog_post_ipoetry_user_relation
+                joinColumns:
+                    -
+                        name: ipoetry_user_blog_post_ipoetry_user_blog_post_id
+                        referencedColumnName: ipoetry_user_blog_post_id
+
+                inverseJoinColumns:
+                    -
+                        name: ipoetry_user_user_id
+                        referencedColumnName: user_id
+            orderBy: null
+    oneToOne:
+        ipoetryBlogPostRating:
+            targetEntity: IpoetryBlogPostRating
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ipoetry_blogpost_rating_id:
+                    referencedColumnName: ipoetry_blogpost_rating_id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

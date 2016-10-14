@@ -1,0 +1,16 @@
+{# empty Twig template #}
+{# app/Resources/views/form/form_fields.html.twig #}
+
+{% block form_row %}
+{% spaceless %}
+    <div class="form_row">
+        {{ form_label(form) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form) }}
+            <style type="text/css">
+                .required { color: #336699;};
+            </style>
+    </div>
+
+{% endspaceless %}
+{% endblock form_row %}

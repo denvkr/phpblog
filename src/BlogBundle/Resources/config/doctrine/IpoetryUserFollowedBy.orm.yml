@@ -1,0 +1,57 @@
+IpoetryBundle\Entity\IpoetryUserFollowedBy:
+    type: entity
+    table: ipoetry_user_followed_by
+    #indexes:
+    #    fk_ipoetry_user_followed_by_ipoetry_user1_idx:
+    #        columns:
+    #            - ipoetry_user_user_id
+    id:
+        pkipoetryUserFollowedById:
+            type: integer
+            nullable: false
+            strategy: AUTO
+            options:
+                unsigned: false
+            id: true
+            column: pk_ipoetry_user_followed_by_id
+    fields:
+        ipoetryUserFollowedById:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            column: ipoetry_user_followed_by_id
+        ipoetryUserUserId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            column: ipoetry_user_user_id            
+        ipoetryUserUserParentId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            column: ipoetry_user_user_parent_id
+    manyToOne:
+        ipoetryUserSubscribers:
+            targetEntity: IpoetryUser
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: ipoetryUserSubscribedBy
+            joinColumns:
+                ipoetry_user_user_id:
+                    referencedColumnName: user_id
+            orphanRemoval: false
+        ipoetryUserFollowers:
+            targetEntity: IpoetryUser
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: ipoetryUserFollowedBy
+            joinColumns:
+                ipoetry_user_followed_by_id:
+                    referencedColumnName: user_id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

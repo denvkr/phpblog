@@ -1,0 +1,42 @@
+IpoetryBundle\Entity\IpoetryPoetryIpoetryTagsRelation:
+    type: entity
+    table: ipoetry_poetry_ipoetry_tags_relation
+    id:
+        ipoetryPoetryIpoetryTagsRelationId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ipoetry_poetry_ipoetry_tags_relation_id
+            generator:
+                strategy: IDENTITY
+    fields:
+        ipoetryPoetryPoetryParentId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            column: ipoetry_poetry_poetry_parent_id
+    manyToOne:
+        ipoetryPoetryPoetry:
+            targetEntity: IpoetryPoetry
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ipoetry_poetry_poetry_id:
+                    referencedColumnName: poetry_id
+            orphanRemoval: false
+        ipoetryTagsTags:
+            targetEntity: IpoetryTags
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ipoetry_tags_tags_id:
+                    referencedColumnName: ipoetry_tags_tags_id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

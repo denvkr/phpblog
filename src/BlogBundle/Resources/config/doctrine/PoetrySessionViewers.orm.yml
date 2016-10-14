@@ -1,0 +1,20 @@
+IpoetryBundle\Entity\PoetrySessionViewers:
+    type: entity
+    table: poetryviewer
+    repositoryClass: IpoetryBundle\Entity\Repository\PoetrySessionViewersRepository
+    id:
+        sessionId:
+            type: integer
+            nullable: false
+            strategy: IDENTITY
+            options:
+                unsigned: false
+            id: true
+            column: sessionid
+    fields:
+        poetryId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            column: poetryid

@@ -1,0 +1,27 @@
+IpoetryBundle\Entity\CommentLike:
+    type: entity
+    table: commentlike
+    repositoryClass: IpoetryBundle\Entity\Repository\CommentLikeRepository
+    id:
+        likeId:
+            type: integer
+            nullable: false
+            strategy: IDENTITY
+            options:
+                unsigned: false
+            id: true
+            column: like_id
+    fields:
+        userId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            column: user_id
+        commentId:
+            type: integer
+            nullable: false
+            options:
+                fixed: false
+                default: 0
+            column: comment_id

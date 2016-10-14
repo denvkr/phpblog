@@ -1,0 +1,58 @@
+IpoetryBundle\Entity\IpoetryUserGroup:
+    type: entity
+    table: ipoetry_user_group
+    indexes:
+        fk_ipoetry_user_group_ipoetry_user_city1_idx:
+            columns:
+                - ipoetry_user_city_ipoetry_city_id
+    id:
+        ipoetryUserGroupId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ipoetry_user_group_id
+            generator:
+                strategy: IDENTITY
+    fields:
+        ipoetryUserGroupName:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+                default: undefined
+            column: ipoetry_user_group_name
+        ipoetryUserGroupBackgroundImageId:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+                default: '0'
+            column: ipoetry_user_group_background_image_id
+        ipoetryUserGroupDescription:
+            type: string
+            nullable: true
+            length: 1024
+            options:
+                fixed: false
+            column: ipoetry_user_group_description
+        ipoetryUserGroupCityId:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: ipoetry_user_group_city_id
+    manyToOne:
+        ipoetryUserCityIpoetryCity:
+            targetEntity: IpoetryUserCity
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ipoetry_user_city_ipoetry_city_id:
+                    referencedColumnName: ipoetry_city_id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

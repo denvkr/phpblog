@@ -1,0 +1,23 @@
+IpoetryBundle\Entity\IpoetryUserWebsite:
+    type: entity
+    table: ipoetry_user_website
+    id:
+        ipoetryUserWebsiteId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ipoetry_user_website_id
+            generator:
+                strategy: IDENTITY
+    fields:
+        ipoetryUserWebsite:
+            type: string
+            nullable: true
+            length: 2083
+            options:
+                fixed: false
+                default: undefined
+            column: ipoetry_user_website
+    lifecycleCallbacks: {  }

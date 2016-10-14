@@ -1,0 +1,47 @@
+IpoetryBundle\Entity\IpoetryUserEventRelation:
+    type: entity
+    table: ipoetry_user_event_relation
+    indexes:
+        fk_ipoetry_user_event_relation_ipoetry_event1_idx:
+            columns:
+                - ipoetry_event_ipoetry_event_id
+        fk_ipoetry_user_event_relation_ipoetry_user1_idx:
+            columns:
+                - ipoetry_user_user_id
+    id:
+        idipoetryUserEventRelationId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: idipoetry_user_event_relation_id
+        ipoetryUserUserParentId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ipoetry_user_user_parent_id
+    oneToOne:
+        ipoetryUserUser:
+            targetEntity: IpoetryUser
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ipoetry_user_user_id:
+                    referencedColumnName: user_id
+            orphanRemoval: false
+        ipoetryEventIpoetryEvent:
+            targetEntity: IpoetryEvent
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ipoetry_event_ipoetry_event_id:
+                    referencedColumnName: ipoetry_event_id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

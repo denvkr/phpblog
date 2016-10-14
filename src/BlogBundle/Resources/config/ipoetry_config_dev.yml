@@ -1,0 +1,24 @@
+## YAML Template.
+ipoetry:
+    UserEmailAuthUrl: http://ipoetry.local/standard-edition-master/web/app_dev.php/useremailauth?code=
+    UserPasswordChangeUrl: http://ipoetry.local/standard-edition-master/web/app_dev.php/userpasswordchange?code=
+    RedirectAfterUnsuccOauthLogin: http://ipoetry.local/standard-edition-master/web/app_dev.php/login
+    UserProfileUrl: http://ipoetry.local/standard-edition-master/web/app_dev.php/unewsfeed/
+    admin: admin@ipoetry.ru
+    uprofilenewsfeedlimit: 20
+    uprofilecommentslimit: 20
+    userratinglimit: 50
+    poetryratinglimit: 50
+    poetrysearchlimit: 20
+    usersearchlimit: 20
+    userslimit: 20
+    SessionTimeout: 120
+    vkontakte:
+            target_path_parameter: 'http://ipoetry.local/standard-edition-master/web/app_dev.php/checkvk'
+            type: vkontakte
+            client_id: 5465145
+            client_secret: UugQE0bzTHVheK5tFWfg
+            scope: email
+            version: 5.52
+            options:
+                csrf: true

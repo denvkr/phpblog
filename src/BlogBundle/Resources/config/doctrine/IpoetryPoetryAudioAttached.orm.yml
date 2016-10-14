@@ -1,0 +1,30 @@
+IpoetryBundle\Entity\IpoetryPoetryAudioAttached:
+    type: entity
+    table: ipoetry_poetry_audio_attached
+    id:
+        ipoetryPoetryAudioAttachedId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ipoetry_poetry_audio_attached_id
+            generator:
+                strategy: AUTO
+    fields:
+        ipoetryPoetryAudioAttachedUrl:
+            type: string
+            nullable: true
+            length: 2083
+            options:
+                fixed: false
+                default: undefined
+            column: ipoetry_poetry_audio_attached_url
+        ipoetryPoetryAudioAttached:
+            type: blob
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+            column: ipoetry_poetry_audio_attached
+    lifecycleCallbacks: {  }

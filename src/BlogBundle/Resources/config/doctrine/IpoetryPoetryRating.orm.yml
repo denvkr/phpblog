@@ -1,0 +1,74 @@
+IpoetryBundle\Entity\IpoetryPoetryRating:
+    type: entity
+    table: ipoetry_poetry_rating
+    repositoryClass: IpoetryBundle\Entity\Repository\IpoetryPoetryRatingRepository
+    id:
+        ipoetryPoetryRatingId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ipoetry_poetry_rating_id
+            generator:
+                strategy: AUTO
+    fields:
+        ipoetryPoetryPoetryId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            column: ipoetry_poetry_poetry_id
+        ipoetryUserUserId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            column: ipoetry_user_user_id
+        ipoetryPoetryRatingValue:
+            type: integer
+            nullable: true
+            options:
+                fixed: false
+                default: 0
+            column: ipoetry_poetry_rating_value
+        ipoetryPoetryPoetryParentId:
+            type: integer
+            nullable: true
+            options:
+                fixed: false
+                default: 0
+            column: ipoetry_poetry_poetry_parent_id
+        ipoetryUserUserParentId:
+            type: integer
+            nullable: true
+            options:
+                fixed: false
+                default: 0
+            column: ipoetry_user_user_parent_id
+        ipoetryPoetryRatingValueUp:
+            type: integer
+            nullable: true
+            options:
+                fixed: false
+                default: 0
+            column: ipoetry_poetry_rating_value_up
+        ipoetryPoetryRatingValueDown:
+            type: integer
+            nullable: true
+            options:
+                fixed: false
+                default: 0
+            column: ipoetry_poetry_rating_value_down
+    oneToOne:
+        ipoetryPoetryPoetry:
+            targetEntity: IpoetryPoetry
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ipoetry_poetry_poetry_id:
+                    referencedColumnName: poetry_id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,28 @@
+IpoetryBundle\Entity\DailyUserRating:
+    type: entity
+    table: daily_user_rating
+    repositoryClass: IpoetryBundle\Entity\Repository\DailyUserRatingRepository
+    id:
+        userId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: user_id
+    fields:
+        cDate:
+            type: string
+            nullable: false
+            length: 10
+            default: 'undefined'
+            options:
+                fixed: false
+            column: cdate
+        userRating:
+            type: integer
+            nullable: true
+            options:
+                fixed: false
+                default: 0
+            column: user_rating

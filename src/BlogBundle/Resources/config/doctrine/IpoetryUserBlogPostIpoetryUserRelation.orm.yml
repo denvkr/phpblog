@@ -1,0 +1,42 @@
+IpoetryBundle\Entity\IpoetryUserBlogPostIpoetryUserRelation:
+    type: entity
+    table: ipoetry_user_blog_post_ipoetry_user_relation
+    id:
+        ipoetryUserBlogPostIpoetryUserId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ipoetry_user_blog_post_ipoetry_user_id
+            generator:
+                strategy: IDENTITY
+    fields:
+        ipoetryUserIpoetryUserParentId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            column: ipoetry_user_ipoetry_user_parent_id
+    manyToOne:
+        ipoetryUserUser:
+            targetEntity: IpoetryUser
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ipoetry_user_user_id:
+                    referencedColumnName: user_id
+            orphanRemoval: false
+        ipoetryUserBlogPostIpoetryUserBlogPost:
+            targetEntity: IpoetryUserBlogPost
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ipoetry_user_blog_post_ipoetry_user_blog_post_id:
+                    referencedColumnName: ipoetry_user_blog_post_id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

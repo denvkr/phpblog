@@ -1,0 +1,21 @@
+IpoetryBundle\Entity\CityReference:
+    type: entity
+    table: city_reference
+    id:
+        cityId:
+            type: integer
+            nullable: false
+            strategy: IDENTITY
+            options:
+                unsigned: false
+            id: true
+            column: id
+    fields:
+        cityName:
+            type: string
+            nullable: true
+            length: 145
+            options:
+                fixed: false
+                default: 0
+            column: city

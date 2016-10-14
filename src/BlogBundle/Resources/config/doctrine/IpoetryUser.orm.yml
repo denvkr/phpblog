@@ -1,0 +1,221 @@
+IpoetryBundle\Entity\IpoetryUser:
+    type: entity
+    table: ipoetry_user
+    indexes:
+        user_name_index:
+            columns:
+                - user_name
+        user_password_index:
+            columns:
+                - user_password
+        user_password:
+            columns:
+                - user_name
+                - user_password
+        user_name_lastname_email:
+            columns:
+                - user_name
+                - user_lastname
+                - user_email
+        fk_ipoetry_user_ipoetry_user_photo1_idx:
+            columns:
+                - user_photo_id
+        fk_ipoetry_user_ipoetry_user_city1_idx:
+            columns:
+                - user_city_id
+        fk_ipoetry_user_ipoetry_user_age1_idx:
+            columns:
+                - user_age_id
+        fk_ipoetry_user_ipoetry_user_website1_idx:
+            columns:
+                - user_website_id
+        fk_ipoetry_user_ipoetry_user_phone_idx:
+            columns:
+                - user_phone_id
+    id:
+        userId:
+            type: integer
+            nullable: false
+            strategy: AUTO
+            options:
+                unsigned: false
+            id: true
+            column: user_id
+    fields:
+        userParentId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+                default: '0'
+            column: user_parent_id
+        userName:
+            type: string
+            nullable: false
+            length: 50
+            options:
+                fixed: false
+                comment: 'Имя пользователя'
+                default: undefined
+            column: user_name
+        userPassword:
+            type: string
+            nullable: false
+            length: 20
+            options:
+                fixed: false
+                comment: Пароль
+                default: undefined
+            column: user_password
+        userLastname:
+            type: string
+            nullable: true
+            length: 50
+            options:
+                fixed: false
+                default: undefined
+            column: user_lastname
+        userEmail:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
+                default: undefined
+            column: user_email
+        userStatus:
+            type: string
+            nullable: true
+            length: 1024
+            options:
+                fixed: false
+                default: ''
+            column: ipoetry_user_status
+        userRatingId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+                comment: 'рейтинг пользователя в системе'
+                default: '0'
+            column: user_rating_id
+        userPostMessageId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+                comment: 'номер комментария в "стене" пользователя'
+                default: '0'
+            column: user_post_message_id
+        userPoetryId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+                comment: 'стихи пользователя'
+                default: '0'
+            column: user_poetry_id
+        userEventId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+                default: '0'
+            column: user_event_id
+        userGroupId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+                comment: 'к каким группам принадлежит пользователь'
+                default: '0'
+            column: user_group_id
+        ipoetryUserFollowersCanRead:
+            type: boolean
+            nullable: false
+            options:
+                comment: 'только подписанные пользователи могут читать посты и стихи пользователя'
+                default: '0'
+            column: ipoetry_user_followers_can_read
+    oneToOne:
+        userAge:
+            targetEntity: IpoetryUserAge
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                user_age_id:
+                    referencedColumnName: ipoetry_user_age_id
+            orphanRemoval: false
+        userCity:
+            targetEntity: IpoetryUserCity
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                user_city_id:
+                    referencedColumnName: ipoetry_city_id
+            orphanRemoval: false
+        userPhone:
+            targetEntity: IpoetryUserPhone
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                user_phone_id:
+                    referencedColumnName: ipoetry_user_phone_id
+            orphanRemoval: false
+        userPhoto:
+            targetEntity: IpoetryUserPhoto
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                user_photo_id:
+                    referencedColumnName: ipoetry_user_photo_id
+            orphanRemoval: false
+        userWebsite:
+            targetEntity: IpoetryUserWebsite
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                user_website_id:
+                    referencedColumnName: ipoetry_user_website_id
+            orphanRemoval: false
+    manyToMany:
+        ipoetryPoetryPoetry:
+            targetEntity: IpoetryPoetry
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: ipoetryUserUser
+            inversedBy: null
+            joinTable: null
+            orderBy: null
+    oneToMany:
+        ipoetryUserFollowedBy:
+            targetEntity: IpoetryUserFollowedBy
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: ipoetryUserFollowers
+            inversedBy: null
+            joinColumns:
+                ipoetry_user_followed_by_id:
+                    referencedColumnName: user_id
+            orphanRemoval: false
+        ipoetryUserSubscribedBy:
+            targetEntity: IpoetryUserFollowedBy
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: ipoetryUserSubscribers
+            inversedBy: null
+            joinColumns:
+                ipoetry_user_user_id:
+                    referencedColumnName: user_id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,7 @@
+#Главная страница
+BlogBundle_root:
+    path:     /
+    defaults: { _controller: BlogBundle:Index:index }
+    requirements:
+        _method:  GET|POST
+        _locale: en|ru

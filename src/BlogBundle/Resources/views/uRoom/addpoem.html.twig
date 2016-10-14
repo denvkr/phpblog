@@ -1,0 +1,426 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru" xml:lang="ru">
+<head>
+<title>ipoetry-создание стихотворения</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="Keywords" content="" />
+<meta name="description" content="Создание стихотворения в ipoetry" />
+<meta name="robots" content="index,follow" />
+
+    {% block stylesheets %}
+        {% stylesheets 'bundles/ipoetry/css/screen.css'
+        'bundles/ipoetry/css/style.css'
+        'bundles/ipoetry/bootstrap/docs/dist/css/bootstrap.min.css'
+        'bundles/ipoetry/bootstrap/docs/dist/css/bootstrap-theme.min.css'
+        'bundles/ipoetry/js/jQuery-File-Upload-9.12.3/css/jquery.fileupload.css'
+         filter='cssrewrite' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />     
+        {% endstylesheets %}        
+    {% endblock %}            
+</head>
+<body id="body_container" style="position: absolute; width:100%;height:100%;max-width:100%;max-height:100%;"> <!--//onload="javascript:Dimension();" width: 1160px; height: 800px;visibility:hidden;-->
+
+    <!-- Верхняя панель -->
+    {{ include('IpoetryBundle::baseheader.html.twig',{'userheaderInfo':userheaderInfo}) }}
+    <!--Верхняя информационная панель  -->
+    <div class="top-info-panel">
+        <div class="container clearfix">
+            <div class="top-info-panel-title">Создание стихотворения</div>
+            <a href="#" onclick="javascript:window.history.back(-1);return false;" class="back-link">Назад</a>
+        </div>
+    </div>
+
+    <div class="main-wrap">
+		<div class="container clearfix">
+
+			<!-- Контент -->
+			<div class="content clearfix">
+                                {% form_theme poetry_creation_form 'IpoetryBundle:Default:form_fields.html.twig' %}
+                                    <form id="poetry_creation_form" class="form-poetry" role="form" method="POST" action="{{ path('IpoetryBundle_uprofileajax') }}" enctype="multipart/form-data"><!-- enctype="multipart/form-data"-->
+                                    {{ form_start(poetry_creation_form) }}
+                                    {% set parameters=[] %}
+                                    {{ form_errors(poetry_creation_form) }}
+
+					<div class="content-block clearfix">
+                                                <div>
+                                                {{ form_label(poetry_creation_form.poetrytitle) }}
+                                                {{ form_errors(poetry_creation_form.poetrytitle) }}
+                                                {{ form_widget(poetry_creation_form.poetrytitle, {'attr': {'style': 'width:100%'}}) }}
+                                                </div>
+                                                <div>
+                                                {{ form_label(poetry_creation_form.poetry) }}
+                                                {{ form_errors(poetry_creation_form.poetry) }}
+                                                {{ form_widget(poetry_creation_form.poetry) }}
+                                                </div>
+						<!--<textarea placeholder="Напишите свой стих" class="big-area"></textarea>-->
+                                                <!--
+						<div class="feed-sorting-input-wrap">
+							<div class="jq-selectbox jqselect" style="display: inline-block; position: relative; z-index:100"><select style="margin: 0px; padding: 0px; position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; opacity: 0;">
+								<option>Тема стихотворения</option>
+								<option>Тема стихотворения1</option>
+								<option>Тема стихотворения2</option>
+								<option>Тема стихотворения3</option>
+							</select><div class="jq-selectbox__select" style="position: relative"><div class="jq-selectbox__select-text" style="width: 143px;">Тема стихотворения</div><div class="jq-selectbox__trigger"><div class="jq-selectbox__trigger-arrow"></div></div></div><div class="jq-selectbox__dropdown" style="position: absolute; display: none;"><ul style="position: relative; list-style: none; overflow: auto; overflow-x: hidden"><li class="selected sel">Тема стихотворения</li><li>Тема стихотворения1</li><li>Тема стихотворения2</li><li>Тема стихотворения3</li></ul></div></div>
+						</div>
+						<div class="feed-sorting-input-wrap">
+							<input type="text" placeholder="Произвольная тема">
+						</div>
+                                                -->
+						<div class="feed-sorting-input-wrap" style="width:625px;">
+                                                    <!--<input type="text" placeholder="Добавить теги">-->
+                                                    <div style="display:inline;">
+                                                    {{ form_label(poetry_creation_form.poetrytag) }}
+                                                    {{ form_errors(poetry_creation_form.poetrytag) }}
+                                                    {{ form_widget(poetry_creation_form.poetrytag,{'attr': {'style': 'width: 170px;'}}) }}
+                                                    {{ form_label(poetry_creation_form.addNewtag) }}
+                                                    {{ form_widget(poetry_creation_form.addNewtag, {'attr': {'class': 'btn-blue-border','style':'float:none;font-size: 8.5px;'}}) }}
+                                                    </div>
+                                                    <div style="display:inline;">
+                                                    {{ form_label(poetry_creation_form.Selectfromlist) }}
+                                                    {{ form_errors(poetry_creation_form.Selectfromlist) }}
+                                                    {{ form_widget(poetry_creation_form.Selectfromlist, {'attr': {'class': 'select-white-bg'}}) }}
+                                                    {{ form_label(poetry_creation_form.addtag) }}
+                                                    {{ form_widget(poetry_creation_form.addtag, {'attr': {'class': 'btn-blue-border','style':'float:none;font-size: 8.5px;'}}) }}
+                                                    </div>
+						</div>
+						<div class="feed-sorting-input-wrap">
+							<div class="add-item-tegs clearfix">
+                                                            <!--
+								<div class="profile-favorite-item">Любовь<div class="profile-favorite-item-close"></div></div>
+								<div class="profile-favorite-item">Война<div class="profile-favorite-item-close"></div></div>
+								<div class="profile-favorite-item">Обида<div class="profile-favorite-item-close"></div></div>
+                                                            -->
+							</div>
+						</div>
+						<div class="add-bg-image-wrap clearfix" style="width:611px;">
+							<div class="add-bg-image-text">Фоновая картинка:</div>
+							<button type="button" id="fileuploadbtn" class="btn-blue-border">Загрузить</button>
+                                                        <input class="btn-blue-border" id="fileupload" type="file" name="files[]" style="visibility:hidden;"/>
+
+						</div>
+					</div>
+					<div class="content-block">
+                                                    {{ form_label(poetry_creation_form.poetrycomment) }}
+                                                    {{ form_errors(poetry_creation_form.poetrycomment) }}
+                                                    {{ form_widget(poetry_creation_form.poetrycomment) }}
+                                                    <!--<textarea placeholder="Комментарий" class="middle-area"></textarea>-->
+					</div>
+					<!--<button class="btn-blue-bg">Опубликовать стихотворение</button>-->
+                                        {{ form_label(poetry_creation_form.enter) }}
+                                        {{ form_widget(poetry_creation_form.enter) }}
+
+                                    {{ form_end(poetry_creation_form) }} 
+				</form>
+			</div>
+			<!-- Контент конец -->
+
+		</div>
+	</div>
+<!--
+<div class="row">
+    <div class="col-lg-14">
+    <a style="margin-left: 15px;" href="{#{{ path('IpoetryBundle_root') }}#}" data-toggle="popover" title="На главную" data-content="Some content inside the popover">На главную</a>
+    <br />
+    </div>
+</div>
+-->
+<!--
+<div class="row">
+    <div class="col-lg-14">
+    <p style="margin: 0 15px 0;">тут можно написать стихотворение</p>
+    <img style="margin: 0 15px 0;" src="user_photo" width="100" height="100" />
+    </div>
+</div>
+-->
+<!--
+<div class="row">
+<div class="col-lg-offset-5 col-lg-2">
+{#{% form_theme poetry_creation_form 'IpoetryBundle:Default:form_fields.html.twig' %}#}
+<form id="poetry_creation_form" class="bg-info form-signin" role="form" method="POST" action="{#{{ path('IpoetryBundle_uprofileajax') }}#}" style="width:400px;" enctype="multipart/form-data">
+-->
+<!-- enctype="multipart/form-data"-->
+{# {{ form_start(form) }} #}
+{#{% set parameters=[] %}#}
+<!--
+<h2 class="form-signin-heading">{#{% trans from "poetrycreation"%}Poetry creation{% endtrans %}#}</h2>
+    {#{{ form_widget(poetry_creation_form) }}#}
+        {# {{ form_end(form) }} #}
+</form>
+-->
+
+<!--    <div>-->
+        <!--<input id="fileupload" type="file" name="files[]" multiple/>-->
+<!--        <input id="fileupload" type="file" name="files[]"/>-->
+        <!--<button id="sendfileupload" type="submit" class="btn btn-primary start">
+                            <i class="glyphicon glyphicon-upload"></i>
+                            <span>Start upload</span>
+        </button>
+        -->        
+<!--        <button id="sendpoetryupload" type="submit" class="btn btn-primary start">
+                            <i class="glyphicon glyphicon-upload"></i>
+                            <span>Start poetry upload</span>
+        </button>
+
+    </div>
+
+</div>
+
+</div>
+-->
+<!-- Подвал -->
+        {{ include('IpoetryBundle::basefooter.html.twig') }}
+{% block javascripts %}
+{% javascripts '@IpoetryBundle/Resources/public/js/jquery-1.11.0.min.js'
+'@IpoetryBundle/Resources/public/bootstrap/dist/js/bootstrap.min.js'
+'@IpoetryBundle/Resources/public/js/w_load.js'
+'@IpoetryBundle/Resources/public/bootstrap/docs/assets/js/ie-emulation-modes-warning.js'
+'@IpoetryBundle/Resources/public/bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js'
+'@IpoetryBundle/Resources/public/js/jQuery-File-Upload-9.12.3/js/vendor/jquery.ui.widget.js'
+'@IpoetryBundle/Resources/public/js/jQuery-File-Upload-9.12.3/js/jquery.iframe-transport.js'
+'@IpoetryBundle/Resources/public/js/jQuery-File-Upload-9.12.3/js/jquery.fileupload.js'
+%}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+{% endblock %}
+<script type="text/javascript">
+    
+    String.prototype.escapeHTML = function() {
+            return this.replace(/&/g, "&amp;")
+                       .replace(/</g, "&lt;")
+                       .replace(/>/g, "&gt;")
+                       .replace(/"/g, "&quot;")
+                       .replace(/'/g, "&#039;");
+        }
+    function deletePoetryTag(){
+        $('.profile-favorite-item-close').each(function(index){
+           $(this).click(function(){
+            console.log($(this).parent('.profile-favorite-item'));
+           $(this).parent('.profile-favorite-item').get(0).remove();
+           });
+        });
+    };
+    function addPoetryTag(){
+            //делаем добавление тегов максимум 10 (ограничение!)
+            //проверяем кол-во div после UserPoetryCreation_poetrytag
+            if ($('div[name="poetrytag"]').length<=10){
+                //проверяем если такой тег уже есть (был выбран)
+                if ($('div[name="poetrytag"]:contains("'+$('#UserPoetryCreation_Selectfromlist :selected').text()+'")').length===0){
+                    $('<div name="poetrytag" class="profile-favorite-item" dbid="'+$('#UserPoetryCreation_Selectfromlist :selected').val()+'">'+$('#UserPoetryCreation_Selectfromlist :selected').text()+'<div class="profile-favorite-item-close"></div></div>').insertAfter( '#UserPoetryCreation_addtag' );
+                    deletePoetryTag();
+                }
+                console.log($('div[name="poetrytag"]:contains("'+$('#UserPoetryCreation_Selectfromlist :selected').text()+'")').length);
+                console.log($('div[name="poetrytag"]').length);
+            }            
+    };
+    function addNewPoetryTag(){
+            //делаем добавление тегов максимум 5 (ограничение!)
+            //проверяем кол-во div после UserPoetryCreation_poetrytag
+            if ($('div[name="poetrytag"]').length<=10){
+                //проверяем если такой тег уже есть (был выбран)
+                if ($('div[name="poetrytag"]:contains("'+$('#UserPoetryCreation_poetrytag').val()+'")').length===0){
+                    $('<div name="poetrytag" class="profile-favorite-item" dbid="-'+($('div[name="poetrytag"]').length+1)+'">'+$('#UserPoetryCreation_poetrytag').val()+'<div class="profile-favorite-item-close"></div></div>').insertAfter( '#UserPoetryCreation_addtag' );
+                    deletePoetryTag();                    
+                }
+                console.log($('div[name="poetrytag"]:contains("'+$('#UserPoetryCreation_poetrytag').val()+'")').length);
+                console.log($('div[name="poetrytag"]').length);
+            }            
+    };
+    //отправка комментария стихотворения
+    function sendpoetrycommentupload() {
+        var oReq = new XMLHttpRequest();
+        oReq.onreadystatechange = function() {
+            //console.log(JSON.parse(oReq.responseText));
+            if (oReq.readyState == 4 && oReq.status == 200) {
+                response=JSON.parse(oReq.response);
+                console.log(response.result+'sendpoetrycommentupload done');
+                if (response.result===1){
+                    return 1;
+                } else
+                    return 0;
+            }
+        };
+
+        //посылаем комментарий к стиху
+        oReq.open("POST", '{{ path('IpoetryBundle_newpoetrycommentajax') }}', true);
+        var blob = new Blob([$('#UserPoetryCreation_poetrycomment').val()], {type: 'text/plain'});
+        oReq.setRequestHeader("Content-Type", "text/plain");
+        //console.log(blob);
+        oReq.send(blob);
+    };
+    
+    //отправка стихотворения
+    function sendpoetryupload() {
+                //проверяем есть ли хоть один тег выбран
+                if ($('div[name="poetrytag"]').length===0){
+                    $('#UserPoetryCreation_Selectfromlist').css('background-color','red');
+                    $('#UserPoetryCreation_poetrytag').css('background-color','red');
+                    return 0;
+                }
+                var oReq = new XMLHttpRequest();
+                oReq.onreadystatechange = function() {
+                    //console.log(JSON.parse(oReq.responseText));
+                    if (oReq.readyState == 4 && oReq.status == 200) {
+                        response=JSON.parse(oReq.response);
+                        console.log(response.result+'sendpoetryupload done');
+                        if (response.result===1){
+                            //готовим по наличию теги
+                            if ($('div[name="poetrytag"]').length){
+                                var poetrytag='';
+                                $('div[name="poetrytag"]').each(function(){
+                                    poetrytag+=',"'+$(this).attr('dbid')+'":"'+$(this).text()+'"';
+                                });
+                            }
+                            //console.log(typeof poetrytag);
+                            if (typeof poetrytag !=='undefined'){
+                               ajaxdata='login_json={"type":"new_poetry","poetry_title":"'+$('#UserPoetryCreation_poetrytitle').val()+'"'+poetrytag+'}';
+                            } else {
+                               ajaxdata='login_json={"type":"new_poetry","poetry_title":"'+$('#UserPoetryCreation_poetrytitle').val()+'"}';
+                            }
+                            console.log(ajaxdata);
+                            //return 0;
+                            //шлем через XMLHttpRequest
+                            $.ajax({
+                            url: '{{ path('IpoetryBundle_uprofileajax') }}',
+                            type: 'post',
+                            data: ajaxdata ,
+                            //HTTP='login='+$('#login_login').val()+'&password='+$('#login_password').val()
+                            //JSON='{"login":"'+$('#login_login').val()+'","password":"'+$('#login_password').val()+'"}'
+                            dataType: 'json',
+                            beforeSend: function() {},
+                            complete: function() {},
+                            success: function(json) {
+                                if (json['result']==1) {
+                                    console.log('AJAX_user_new_poetry result='+json['result']);
+                                    location.href='{{ path('IpoetryBundle_uroom') }}';
+                                } else {
+                                    //location.href='{{ path('IpoetryBundle_root') }}';                
+                                }
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                console.log('error AJAX_user_new_poetry ' + textStatus);
+                            }
+                            });
+                        } else
+                            return 0;
+                    }
+                };
+                oReq.open("POST", '{{ path('IpoetryBundle_uprofileajax') }}', true);
+                var blob = new Blob([$('#UserPoetryCreation_poetry').val()], {type: 'text/plain'});
+                oReq.setRequestHeader("Content-Type", "text/plain");
+                //console.log(blob);
+                oReq.send(blob);
+    }
+    function validating_form(){
+        //делаем экранирование для передачи стихов
+        /*
+        var url = 'http://api.phpasaservice.com/htmlspecialchars?string='+$('#UserPoetryCreation_post').val()+'&callback=?';
+        $.getJSON(url, function(json) {
+            var encodedString = json['return'];
+        });
+        */
+        //отправка комментария стихотворения
+       sendpoetrycommentupload();
+        //отправка стихотворения
+        //отправляем стих как BLOB и по результату смотри на отправку всей оставшейся формы
+       sendpoetryupload();
+
+    };
+
+    $(document).ready(function () {
+        {% block documentReady %}
+            $('#fileupload').fileupload({
+                type: 'POST',
+                dataType: 'json',
+                acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+                url: '{{ path('IpoetryBundle_uprofileajax') }}',
+                dropZone:null,
+                //fileInput:$('input:file[id="fileupload"]'),
+                //paramName:'files[]',
+                multipart:false,
+                singleFileUploads:true,
+                loadImageMaxFileSize:99000,
+                imageMaxWidth:1024,
+                imageMaxHeight:768,
+                loadAudioMaxFileSize:99000,
+                add: function (e, data) {
+                    data.context = $('<div class="add-bg-image-text" style="margin-top:11px;margin-right:0px;float:none;"/>').text(data.files[0].name+' загрузка...').insertAfter('#fileupload');
+                    data.submit();
+                        //.success(function (result, textStatus, jqXHR) {console.log(result);})
+                        //.error(function (jqXHR, textStatus, errorThrown) {})
+                        //.complete(function (result, textStatus, jqXHR) { console.log(result);});
+                },
+                drop: function (e, data) {
+                    $.each(data.files, function (index, file) {
+                        console.log('Dropped file: ' + file.name);
+                    });
+                },
+                change: function (e, data) {
+                    $.each(data.files, function (index, file) {
+                        console.log('Selected file: ' + file.name);
+                    });
+                },
+                done: function (e, data) {
+                    data.context.text('Загрузка '+data.files[0].name+' завершена.');
+                    $.each(data.result.files, function (index, file) {
+                        console.log('File uploaded: ' + file.name);
+                    });
+                }
+
+            });
+            $('#sendfileupload').on('click',function () {
+                    //data.context = $('<p/>').text('Uploading...').replaceAll($(this));
+                    data.submit();
+            });
+            //отправка стихотворения
+            $('#sendpoetryupload').on('click',function () {
+                var oReq = new XMLHttpRequest();
+                oReq.onreadystatechange = function() {
+                    //console.log(JSON.parse(oReq.responseText));
+                    if (oReq.readyState == 4 && oReq.status == 200) {
+                    }
+                };
+                ///console.log($('#UserPoetryCreation_poetry').val());
+                oReq.open("POST", '{{ path('IpoetryBundle_uprofileajax') }}', true);
+                var blob = new Blob([$('#UserPoetryCreation_poetry').val()], {type: 'text/plain'});
+                console.log(blob);
+                oReq.setRequestHeader("Content-Type", "text/plain");
+                oReq.send(blob);
+            });
+            $('#poetry_creation_form').attr('method','');
+            $('#poetry_creation_form').attr('action','javascript:validating_form();');
+            //изменяем размер окна названия стихотворения
+            $('#UserPoetryCreation_poetrytitle').css('width','250px');
+            $('#UserPoetryCreation_addtag').on('click', function (event) {
+                console.log('UserPoetryCreation_addtag_click');
+                console.log($('#UserPoetryCreation_Selectfromlist :selected').text());
+                event.preventDefault();
+                //если дефолтный выбор то не добавляем теги
+                if ($('#UserPoetryCreation_Selectfromlist :selected').text()!=='Добавить теги'){
+                    $('#UserPoetryCreation_Selectfromlist').css('background-color','white');
+                    $('#UserPoetryCreation_poetrytag').css('background-color','white');                    
+                    addPoetryTag();
+                }
+            });
+            $('#UserPoetryCreation_addNewtag').on('click', function (event) {
+                console.log('UserPoetryCreation_addNewtag_click');
+                console.log($('#UserPoetryCreation_poetrytag').val());
+                event.preventDefault();
+                if ($('#UserPoetryCreation_poetrytag').val()!==''){
+                    $('#UserPoetryCreation_Selectfromlist').css('background-color','white');
+                    $('#UserPoetryCreation_poetrytag').css('background-color','white'); 
+                    addNewPoetryTag();
+                }
+            });
+            //клик по кнопке вызывает клик по скрытому input
+            $('#fileuploadbtn').on('click',function(){
+                $('#fileupload').click();
+                console.log('$(#fileupload).clicked')
+            });
+            {{ include('IpoetryBundle::basejs.html.twig') }}
+        {% endblock documentReady %}
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+IpoetryBundle\Entity\IpoetryUserFollowers:
+    type: entity
+    table: ipoetry_user_followers
+    indexes:
+        fk_ipoetry_user_followers_ipoetry_user1_idx:
+            columns:
+                - ipoetry_user_user_id
+    id: 
+        pkIpoetryUserFollowersId:
+            type: integer
+            nullable: false
+            strategy: AUTO
+            options:
+                unsigned: false
+            id: true
+            column: pk_ipoetry_user_followers_id
+    fields:
+        ipoetryUserFollowersId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            column: ipoetry_user_followers_id
+        ipoetryUserUserParentId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            column: ipoetry_user_user_parent_id
+    manyToOne:
+        ipoetryUserUser:
+            targetEntity: IpoetryUser
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ipoetry_user_user_id:
+                    referencedColumnName: user_id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

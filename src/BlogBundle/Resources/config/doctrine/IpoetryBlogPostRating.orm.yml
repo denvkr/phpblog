@@ -1,0 +1,74 @@
+IpoetryBundle\Entity\IpoetryBlogPostRating:
+    type: entity
+    table: ipoetry_blogpost_rating
+    repositoryClass: IpoetryBundle\Entity\Repository\IpoetryBlogPostRatingRepository
+    id:
+        ipoetryBlogPostRatingId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ipoetry_blogpost_rating_id
+            generator:
+                strategy: AUTO
+    fields:
+        ipoetryBlogPostPoetryId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            column: ipoetry_blogpost_poetry_id
+        ipoetryUserUserId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            column: ipoetry_user_user_id
+        ipoetryBlogPostRatingValue:
+            type: integer
+            nullable: true
+            options:
+                fixed: false
+                default: 0
+            column: ipoetry_blogpost_rating_value
+        ipoetryBlogPostPoetryParentId:
+            type: integer
+            nullable: true
+            options:
+                fixed: false
+                default: 0
+            column: ipoetry_blogpost_poetry_parent_id
+        ipoetryUserUserParentId:
+            type: integer
+            nullable: true
+            options:
+                fixed: false
+                default: 0
+            column: ipoetry_user_user_parent_id
+        ipoetryBlogPostRatingValueUp:
+            type: integer
+            nullable: true
+            options:
+                fixed: false
+                default: 0
+            column: ipoetry_blogpost_rating_value_up
+        ipoetryBlogPostRatingValueDown:
+            type: integer
+            nullable: true
+            options:
+                fixed: false
+                default: 0
+            column: ipoetry_blogpost_rating_value_down
+    oneToOne:
+        ipoetryPoetryBlogPost:
+            targetEntity: IpoetryUserBlogPost
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ipoetry_blogpost_rating_id:
+                    referencedColumnName: ipoetry_user_blog_post_id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

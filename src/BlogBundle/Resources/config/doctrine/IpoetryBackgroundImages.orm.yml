@@ -1,0 +1,65 @@
+IpoetryBundle\Entity\IpoetryBackgroundImages:
+    type: entity
+    table: ipoetry_background_images
+    indexes:
+        fk_ipoetry_background_images_ipoetry_event1_idx:
+            columns:
+                - ipoetry_event_ipoetry_event_id
+        fk_ipoetry_background_images_ipoetry_poetry1_idx:
+            columns:
+                - ipoetry_poetry_poetry_id
+                - ipoetry_poetry_ipoetry_poetry_parent_id
+        fk_ipoetry_background_images_ipoetry_user_group1_idx:
+            columns:
+                - ipoetry_user_group_ipoetry_user_group_id
+    id:
+        ipoetryBackgroundImagesId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ipoetry_background_images_id
+            generator:
+                strategy: IDENTITY
+    fields:
+        ipoetryBackgroundImage:
+            type: blob
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+            column: ipoetry_background_image
+    manyToOne:
+        ipoetryEventIpoetryEvent:
+            targetEntity: IpoetryEvent
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ipoetry_event_ipoetry_event_id:
+                    referencedColumnName: ipoetry_event_id
+            orphanRemoval: false
+        ipoetryUserGroupIpoetryUserGroup:
+            targetEntity: IpoetryUserGroup
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ipoetry_user_group_ipoetry_user_group_id:
+                    referencedColumnName: ipoetry_user_group_id
+            orphanRemoval: false
+    oneToOne:
+        ipoetryPoetryPoetry:
+            targetEntity: IpoetryPoetry
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ipoetry_poetry_poetry_id:
+                    referencedColumnName: poetry_id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

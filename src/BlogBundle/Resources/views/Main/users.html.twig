@@ -1,0 +1,237 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru" xml:lang="ru" ng-app="usersApp">
+<head>
+<title>ipoetry-пользователи</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="Keywords" content="" />
+<meta name="description" content="Пользователи ipoetry" />
+<meta name="robots" content="index,follow" />
+    {% block stylesheets %}
+        {% stylesheets 'bundles/ipoetry/css/screen.css'
+        'bundles/ipoetry/css/style.css'
+        'bundles/ipoetry/bootstrap/docs/dist/css/bootstrap.min.css'
+        'bundles/ipoetry/bootstrap/docs/dist/css/bootstrap-theme.min.css'
+        'bundles/ipoetry/js/jQuery-File-Upload-9.12.3/css/jquery.fileupload.css'
+         filter='cssrewrite' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />     
+        {% endstylesheets %}        
+    {% endblock %}    
+</head>
+<body id="body_container" class="users" style="position: absolute; width:100%;height:100%;max-width:100%;max-height:100%;"> <!--//onload="javascript:Dimension();" width: 1160px; height: 800px;visibility:hidden;-->
+    <!--    <button id="setusersubscriptionbtn" type="submit" class="btn btn-primary start">
+                            <i class="glyphicon glyphicon-upload"></i>
+                            <span>Subscribe</span>
+        </button>
+    -->
+
+{% trans_default_domain "users" %}
+<div ng-controller="UsersController" ng-init="init({{app.request.attributes.get('_route_params')['user']}},'{{app.request.attributes.get('_route_params')['utype']}}',{{userslimit}},'{{ path('IpoetryBundle_mainajax') }}','{{geturlpart(app.request.attributes.get('_route'),-1)}}')">
+	<!-- Верхняя панель -->
+        {{ include('IpoetryBundle::baseheader.html.twig',{'userheaderInfo':userheaderInfo}) }}
+<div class="top-info-panel gray-bg">
+			<div class="container clearfix">
+				<div class="feed-sorting">
+					<div class="feed-sorting-items-wrap tabs">
+						<div class="feed-sorting-item tab ng-class: activestate_s;" ng-click="Users('subscribers')" style="visibility:{{displaystatus}};">{% trans %}%Subscribers%{% endtrans %}</div>
+						<div class="feed-sorting-item tab ng-class: activestate_f;" ng-click="Users('follow')" style="visibility:{{displaystatus}};">{% trans %}%Follow%{% endtrans %}</div>
+					</div>
+				</div>
+				<a href="#" onclick="javascript:window.history.back(-1);return false;" class="back-link">Назад</a>
+			</div>
+		</div>    
+<!-- Главный контейнер -->
+<div class="main-wrap">
+<div class="container">
+    <div class="feed-sorting clearfix">
+    
+        <div class="feed-sorting-title" style="visibility:{{displaystatus}};">{{userhassubsribers .userName}} {{userhassubsribers.userLastname}} <ng-bind-html ng-bind-html="feedsortingtitle|trusted_html"></ng-bind-html></div>
+					<form action="">
+						<div class="feed-sorting-input-wrap">
+							<input id="userssearchinput" name="userssearchinput" type="text" placeholder="Имя Фамилия" ng-model="userssearch" ng-change="change_userssearch()"/>
+						</div>
+                                                <div class="feed-sorting-input-wrap">
+        <!--
+                                                            <select name="citiesselect" style="margin: 0px; padding: 0px; position: relative; left: 0px; top: 0px; width: 100%; height: 100%; opacity: 1;" ng-model="cities.model">
+                                                                <option ng-repeat="city in cities.availableOptions" value="{% verbatim %}{{city.cityId}}{% endverbatim %}">{% verbatim %}{{city.cityName}}{% endverbatim %}</option>
+                                                            </select>							<div class="jq-selectbox jqselect" style="display: inline-block; position: relative; z-index: 100;"><select style="margin: 0px; padding: 0px; position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; opacity: 0;" styler="" my-directive ng-model="c">
+                                                                <option ng-repeat="city in cities" value="{% verbatim %}{{city.cityId}}{% endverbatim %}">{% verbatim %}{{city.cityName}}{% endverbatim %}</option>
+                                                            </select><div class="jq-selectbox__select" style="position: relative"><div class="jq-selectbox__select-text" style="width: 47px;">Город</div><div class="jq-selectbox__trigger"><div class="jq-selectbox__trigger-arrow"></div></div></div><div class="jq-selectbox__dropdown" style="position: absolute; display: none; height: auto; bottom: auto; top: 0px;"><ul style="position: relative; list-style: none; overflow-y: auto; overflow-x: hidden; max-height: 696px;"><li ng-repeat="city in cities">{% verbatim %}{{city.cityName}}{% endverbatim %}</li></ul></div></div>
+        -->
+                                                    <button type="button" class="btn-blue-bg" ng-model="bootstrap_cities.selected" data-html="1" data-toggle="true" bs-options="bootstrap_city.label for bootstrap_city in bootstrap_cities.availableOptions" bs-select placeholder="Город" ng-change="CityFilter()" style="display:none;">Город<span class="caret"></span></button>
+                                                    <div class="input-group" style="top: 16px;"> 
+                                                        <input id="citysearchinput" placeholder="Введите названия города" style="width: 200px;border-radius: 0px;border-top-left-radius: 25px;border-bottom-left-radius: 25px;" ng-keyup="clickCityFilter($event)"/>
+                                                            <div class="input-group-btn"> 
+                                                                <button id="selectcitybtn" type="button" class="btn-blue-bg dropdown-toggle" data-toggle="true" aria-haspopup="true" aria-expanded="false" ng-model="bootstrap_cities.selected" data-html="1" bs-options="bootstrap_city.label for bootstrap_city in bootstrap_cities.availableOptions" bs-select placeholder="Город" ng-change="CityFilter()" style="height: 40px;padding: 12px 14px 14px;">Город <span class="caret"></span></button>
+                                                            </div> 
+                                                    </div>						
+                                                </div>
+						<div class="feed-sorting-input-wrap">
+							<div class="jq-selectbox jqselect" style="display: inline-block; position: relative; z-index: 99;"><select style="margin: 0px; padding: 0px; position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; opacity: 0;">
+								<option>Интересы</option>
+								<option>Интересы1</option>
+								<option>Интересы2</option>
+								<option>Интересы3</option>
+							</select><div class="jq-selectbox__dropdown" style="position: absolute; display: none;"><ul style="position: relative; list-style: none; overflow: auto; overflow-x: hidden"><li class="selected sel">Интересы</li><li>Интересы1</li><li>Интересы2</li><li>Интересы3</li></ul></div></div>
+						</div>
+       <!--
+						<button class="btn-blue-bg">Добавить подписчиков</button>
+       -->
+					</form>
+    </div>
+    <!--
+    <button id="subscribersbtn" type="submit" class="btn btn-primary start" ng-click="Users('subscribers')">
+                        <span>{% trans %}%Subscribers%{% endtrans %}</span>
+    </button>
+    <button id="followbtn" type="submit" class="btn btn-primary start" ng-click="Users('follow')">
+                        <span>{% trans %}%Follow%{% endtrans %}</span>
+    </button>
+    -->
+</div>
+</div>
+<div class="tab_content">
+
+					<!-- Подписчики -->
+					<div class="rating-list-wrap tab_item clearfix">
+
+						<!-- Подписчик -->
+						<div class="rating-list-item" ng-repeat="user in users">
+							<div class="rating-list-item-center clearfix" style="height: 106px;">
+								<a href="../user-profile/{% verbatim %}{{user.userId}}{% endverbatim %}" class="rating-list-item-img-wrap">
+									<img src="{% verbatim %}{{user.userPhotoUrl}}{% endverbatim %}" alt="alt">
+								</a>
+								<div class="rating-list-item-text">
+									<a href="../user-profile/{% verbatim %}{{user.userId}}{% endverbatim %}" class="user-rating-list-item-name" userid="{% verbatim %}{{user.userId}}{% endverbatim %}">{% verbatim %}{{user.userName}}{% endverbatim %} {% verbatim %}{{user.userLastname}}{% endverbatim %}</a>
+									<div class="user-rating-list-item-location">{% verbatim %}{{user.cityName}}{% endverbatim %}, Россия</div>
+								</div>
+							</div>
+							<div class="rating-list-item-bottom clearfix">
+                                                            <!--
+								<button class="users-user-subscribers">{% trans %}%Remove Subscriber%{% endtrans %}</button>
+								<button class="users-user-subscribers">{% trans %}%Remove Follow%{% endtrans %}</button>
+                                                            -->
+                                                            <button id="users-user-subscribersbtn" class="users-user-subscribers" userid="{% verbatim %}{{user.userId}}{% endverbatim %}" ng-click="gotolink($event);">Подписчики</button>
+                                                            <button class="users-user-subscribers-del" ng-show="usersusersubscribersdel" userid="{% verbatim %}{{user.userId}}{% endverbatim %}" ng-click="Unsubscribe('subscribers',$event)">{% trans %}%Remove Subscriber%{% endtrans %}</button>
+                                                            <button class="users-user-subscribers-del" ng-show="usersuserfollowdel" userid="{% verbatim %}{{user.userId}}{% endverbatim %}" ng-click="Unsubscribe('follow',$event)">{% trans %}%Remove Follow%{% endtrans %}</button>
+                                                                
+							</div>
+						</div>
+						<!-- Подписчик конец -->
+
+					</div>
+					<!-- Подписчики конец -->
+
+				</div>
+<!--
+    {% block body %}
+            <div ng-repeat="user in users">
+              <div class="userid" style="display:inline;">{% verbatim %}{{user.userId}}{% endverbatim %}</div>
+              <div class="username" style="display:inline;">{% verbatim %}{{user.userName}}{% endverbatim %}</div>
+              <div class="userlastname" style="display:inline;">{% verbatim %}{{user.userLastname}}{% endverbatim %}</div>
+              <div class="usercity" style="display:inline;">{% verbatim %}{{user.cityName}}{% endverbatim %}</div>
+              <img src="{% verbatim %}{{user.userPhotoUrl}}{% endverbatim %}" width="50" heigth="50" />
+    <button name="removesubscriberbtn" userid="{% verbatim %}{{user.userId}}{% endverbatim %}" type="submit" class="btn btn-sm btn-primary start">
+                        <span>{% trans %}%Remove Subscriber%{% endtrans %}</span>
+    </button>
+    <button name="removesubscriberbtn" userid="{% verbatim %}{{user.userId}}{% endverbatim %}" type="submit" class="btn btn-sm btn-primary start">
+                        <span>{% trans %}%Remove Follow%{% endtrans %}</span>
+    </button>
+              
+              <div style="clear:both;"></div>
+          </div>
+    {% endblock %}
+-->
+    <div style="clear:both;"></div>
+
+    <button id="getusersblockbtn" type="submit" class="btn-blue-bg" ng-click="moreUsers()">
+                        <span>{% trans %}%More users%{% endtrans %}</span>
+    </button>
+
+    <input id="datapartnum" type="hidden" value="2"/>
+<!-- Подвал -->
+        {{ include('IpoetryBundle::basefooter.html.twig') }}
+</div>
+    <!--<div><#{{geturlpart(app.request.attributes.get('_route'),-1)}}#}</div>    -->
+{% block javascripts %}
+{% javascripts '@IpoetryBundle/Resources/public/js/jquery-1.11.0.min.js'
+'@IpoetryBundle/Resources/public/bootstrap/dist/js/bootstrap.min.js'
+'@IpoetryBundle/Resources/public/js/angular.min.js'
+'@IpoetryBundle/Resources/public/js/angular-animate.min.js'
+'@IpoetryBundle/Resources/public/js/usersapp.js'
+'@IpoetryBundle/Resources/public/js/w_load.js'
+'@IpoetryBundle/Resources/public/js/libs.js'
+'@IpoetryBundle/Resources/public/js/common.js'
+'@IpoetryBundle/Resources/public/js/angular-strap-2.3.6/dist/angular-strap.js'
+'@IpoetryBundle/Resources/public/js/angular-strap-2.3.6/dist/angular-strap.tpl.min.js'
+'@IpoetryBundle/Resources/public/bootstrap/docs/assets/js/ie-emulation-modes-warning.js'
+'@IpoetryBundle/Resources/public/bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js'
+%}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+{% endblock %}
+
+<script type="text/javascript">
+    
+    String.prototype.escapeHTML = function() {
+            return this.replace(/&/g, "&amp;")
+                       .replace(/</g, "&lt;")
+                       .replace(/>/g, "&gt;")
+                       .replace(/"/g, "&quot;")
+                       .replace(/'/g, "&#039;");
+    };
+    function stripslashes(str) {
+        str = str.replace(/\\'/g, '\'');
+        str = str.replace(/\\"/g, '"');
+        str = str.replace(/\\0/g, '\0');
+        str = str.replace(/\\\\/g, '\\');
+        return str;
+    };
+
+    function GetUsers(usertype){
+        //делаем запрос о наличии у пользователя ленты со стихами/комментариями
+        //шлем AJAX
+        ajaxdata=JSON.stringify({type:"get_users",user:usertype,datapart:$('#datapartnum').val()});
+        console.log(ajaxdata);
+        url='{{ path('IpoetryBundle_mainajax') }}';
+        type='post';
+        dataType='json';
+        onsuccess=function(json) {
+            console.log(json['result']);
+            console.log(json['users']);
+            if (json['result']>0) {
+                console.log($('#datapartnum').val());
+                $( '<p>'+json['users']+'</p>' ).insertBefore('#getmoreusersbtn');
+                console.log('AJAX_Users_available result='+json['result']);
+                $('#datapartnum').val((Number($('#datapartnum').val())+1));
+                //location.href='{{ path('IpoetryBundle_uroom') }}';
+            }
+        };
+        onerror=function(jqXHR, textStatus, errorThrown) {
+            console.log('error AJAX_users result ' + textStatus);
+        };
+        ajaxprototype(ajaxdata,url,type,dataType,onsuccess,onerror);
+
+    };
+    
+    $(document).ready(function () {
+
+        $('#getmoreusersbtn').on('click',function (event){
+            event = event || window.event;
+
+            if (event.preventDefault) { // если метод существует
+              event.preventDefault(); // то вызвать его
+            } else { // иначе вариант IE8-:
+              event.returnValue = false;
+            }
+            GetUsers('subscriber');
+        });
+        {{ include('IpoetryBundle::basejs.html.twig') }}
+
+    });
+
+</script>
+
+</body>
+</html>
+

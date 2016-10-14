@@ -1,0 +1,49 @@
+IpoetryBundle\Entity\IpoetryEvent:
+    type: entity
+    table: ipoetry_event
+    id:
+        ipoetryEventId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ipoetry_event_id
+            generator:
+                strategy: IDENTITY
+    fields:
+        ipoetryEventDate:
+            type: datetime
+            nullable: true
+            column: ipoetry_event_date
+        ipoetryEventPlace:
+            type: string
+            nullable: true
+            length: 1024
+            options:
+                fixed: false
+                default: undefined
+            column: ipoetry_event_place
+        ipoetryEventBackgroundImageId:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+                comment: 'фоновая картинка события'
+                default: '0'
+            column: ipoetry_event_background_image_id
+        ipoetryEventUserGroupWelcome:
+            type: boolean
+            nullable: true
+            options:
+                comment: 'пригласить подписчиков группы на мероприятие'
+                default: '0'
+            column: ipoetry_event_user_group_welcome
+        ipoetryEventDescription:
+            type: string
+            nullable: true
+            length: 1024
+            options:
+                fixed: false
+            column: ipoetry_event_description
+    lifecycleCallbacks: {  }

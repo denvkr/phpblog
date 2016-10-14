@@ -1,0 +1,11 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_host: 127.0.0.1
+    database_port: 3306
+    database_name: phpblog
+    database_user: phpblog_admin
+    database_password: udl
+    database_path: '%kernel.root_dir%/app.sqlite'
+    debug_toolbar: true
+    debug_redirects: false
+    use_assetic_controller: false

@@ -1,0 +1,47 @@
+IpoetryBundle\Entity\IpoetryPoetryIpoetryPoetryVideoAttachedRelation:
+    type: entity
+    table: ipoetry_poetry_ipoetry_poetry_video_attached_relation
+    indexes:
+        fk_ipoetry_poetry_has_ipoetry_poetry_video_attached_ipoetry_idx:
+            columns:
+                - ipoetry_poetry_video_attached_ipoetry_poetry_video_attached_id
+        fk_ipoetry_poetry_has_ipoetry_poetry_video_attached_ipoetry_idx1:
+            columns:
+                - ipoetry_poetry_poetry_id
+    id:
+        ipoetryPoetryIpoetryPoetryVideoAttachedRelationId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ipoetry_poetry_ipoetry_poetry_video_attached_relation_id
+        ipoetryPoetryPoetryParentId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ipoetry_poetry_poetry_parent_id
+    oneToOne:
+        ipoetryPoetryPoetry:
+            targetEntity: IpoetryPoetry
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ipoetry_poetry_poetry_id:
+                    referencedColumnName: poetry_id
+            orphanRemoval: false
+        ipoetryPoetryVideoAttachedIpoetryPoetryVideoAttached:
+            targetEntity: IpoetryPoetryVideoAttached
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ipoetry_poetry_video_attached_ipoetry_poetry_video_attached_id:
+                    referencedColumnName: ipoetry_poetry_video_attached_id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

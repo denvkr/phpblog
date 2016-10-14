@@ -1,0 +1,23 @@
+IpoetryBundle\Entity\IpoetryClassicAuthors:
+    type: entity
+    table: ipoetry_classic_authors
+    id:
+        classicAuthorsId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: classic_authors_id
+            generator:
+                strategy: IDENTITY
+    fields:
+        classicAuthorsName:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+                default: undefined
+            column: classic_authors_name
+    lifecycleCallbacks: {  }

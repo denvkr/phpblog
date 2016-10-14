@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC  "-//W3C//DTD HTML 4.01 Transitional//EN" "www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <title>Демонстрационная блог платформа.Админка</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Блог платформа, на основе компонентов систем PHPShop и Symfony">
+        <meta name="keywords" content="блог,платформа,компоненты,модули,phpshop,symfony" />
+        <meta name="author" content="Krasavin Denis" />
+	<meta name="copyright" content="snabstudio.ru" />
+        <meta name="document-state" content="Dynamic" />
+        <meta name="robots" content="all">
+    	<link id="app_theme" href="../public/css/style.css" rel="stylesheet">
+	<!-- Подключаем библиотеку слайдеры и iframe -->
+	<!-- Fancybox -->
+    	<link rel="stylesheet" href="../public/js/fancybox/jquery.fancybox.css">
+        <!-- /Fancybox -->
+        <!-- Bootstrap -->
+        <!--<link id="bootstrap_theme" href="java/bootstrap/docs/dist/css/bootstrap.min.css" rel="stylesheet">-->
+        <link id="bootstrap_theme" href="../public/bootstrap/dist/css/{{bootstrap_theme}}.css" rel="stylesheet">
+        <!-- Bootstrap theme -->
+        <!--<link href="java/bootstrap/docs/dist/css/bootstrap-theme.min.css" rel="stylesheet">-->
+        <!-- Custom styles for this template -->
+        <!--<link href="../../../bootstrap/theme.css" rel="stylesheet">-->
+	<!--/Bootstrap-->    
+	<!-- Подключаем всплывающие подсказки -->
+	<link rel="stylesheet" type="text/css" href="../public/js/jquery-ui-1.11.2.custom/jquery-ui.min.css">
+	<link rel="stylesheet" type="text/css" href="../public/js/jquery-ui-1.11.2.custom/jquery-ui.structure.min.css">
+	<link rel="stylesheet" type="text/css" href="../public/js/jquery-ui-1.11.2.custom/jquery-ui.theme.min.css">
+    </head>
+<body id="body_container">
+<div class="container-fluid" id="container_main">
+<div class="row">
+<div class=".col-xs-14">
+    {% include 'regmenubase.html.twig' %}
+<h1 class="bg-info">Админка</h1>
+    {{knpmenu|raw}}
+</div>
+</div>
+<div class="row">
+    <div class=".col-xs-6 .col-sm-4">
+    <div class="center-block">
+
+    </div>        
+    </div>
+</div>
+    <div class="clearfix visible-xs-block"></div>
+    <div class="emptyblock"></div>
+<div class="row" style="margin-bottom: 1px;">
+    <div class=".col-xs-6 .col-sm-4">
+    </div>        
+</div>   
+
+    <div class="footer">
+        Увидело-{{visitor_count}}
+        <div class="firminfo" itemscope itemtype="http://schema.org/Organization">
+          <span itemprop="name">cnabstudio.ru (cnabstudio)</span>
+            тел.:<span itemprop="telephone">+7(916) 141 21 80 </span>,
+            <a href="mailto:admin@cnabstudio.ru" itemprop="email">admin@cnabstudio.ru</a>
+            пришли с IP {{host}}
+        </div>
+    </div>    
+</div>
+    <div>{{num_cnt_attempt}}</div>
+    <!--Подключаем JQUERY -->
+    <script type="text/javascript" src="../public/js/jquery-1.11.0.min.js"></script>
+    <!-- Fancybox -->
+    <script type="text/javascript" src="../public/js/fancybox/jquery.fancybox.pack.js"></script>
+    <!-- Bootstrap -->
+    <script type="text/javascript" src="../public/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- Just for debugging purposes. Don\'t actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="../public/bootstrap/docs/assets/js/ie-emulation-modes-warning.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../public/bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js"></script>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>-->
+    <script type="text/javascript" src="../public/js/jquery-ui-1.11.2.custom/jquery-ui.min.js"></script>
+    <!-- Подключаем inputmask -->
+    <script type="text/javascript" src="../public/js/jquery.inputmask-3.x/js/inputmask.js"></script>
+    <script type="text/javascript" src="../public/js/jquery.inputmask-3.x/js/inputmask.date.extensions.js"></script>
+    <script type="text/javascript" src="../public/js/jquery.inputmask-3.x/js/inputmask.phone.extensions.js"></script>
+    <script type="text/javascript" src="../public/js/jquery.inputmask-3.x/js/inputmask.extensions.js"></script>       
+    <script type="text/javascript" src="../public/js/jquery.inputmask-3.x/js/jquery.inputmask.js"></script>
+
+    <script type="text/javascript" src="../public/js/jquery.cookie.js"></script>
+        
+    <!-- Подключаем browser detecting -->
+    <script type="text/javascript" src="../public/js/jquery-browser-plugin-master/dist/jquery.browser.min.js"></script>	
+    <!-- Подключаем изменения элементов экрана -->
+    <script type="text/javascript" src="../public/js/window_resize.js"></script>	
+    <script type="text/javascript" src="../public/js/basic_jquery_support.js"></script>        
+
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="120;{{ path('IpoetryBundle_root') }}">
+        <title>{% block title %}Благодарим за прохождение авторизации!{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    </head>
+    <body>
+        {% block body %}
+            {% if button_visibility == true %}
+                <input type="button" value="Продолжить">
+            {% endif %}
+        {% endblock %}
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>

@@ -1,0 +1,49 @@
+IpoetryBundle\Entity\IpoetryUserPhoto:
+    type: entity
+    table: ipoetry_user_photo
+    indexes:
+        photo_url:
+            columns:
+                - user_photo_url
+    id:
+        ipoetryUserPhotoId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ipoetry_user_photo_id
+            generator:
+                strategy: IDENTITY
+    fields:
+        userPhoto:
+            type: blob
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+            column: user_photo
+        userPhotoUrl:
+            type: string
+            nullable: false
+            length: 2083
+            options:
+                fixed: false
+                default: undefined
+            column: user_photo_url
+        userBkground:
+            type: blob
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+            column: user_bkground
+        userBkgroundUrl:
+            type: string
+            nullable: true
+            length: 2083
+            options:
+                fixed: false
+                default: undefined
+            column: user_bkground_url
+    lifecycleCallbacks: {  }

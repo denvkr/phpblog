@@ -1,0 +1,744 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru" xml:lang="ru" ng-app="unewsfeedApp">
+<head>
+<title>ipoetry-личный кабинет просмотр своей ленты</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="Keywords" content="" />
+<meta name="description" content="Просмотр своей ленты стихов в своем профиле ipoetry" />
+<meta name="robots" content="index,follow" />
+
+    {% block stylesheets %}
+        {% stylesheets 'bundles/ipoetry/css/screen.css'
+        'bundles/ipoetry/css/style.css'
+        'bundles/ipoetry/bootstrap/docs/dist/css/bootstrap.min.css'
+        'bundles/ipoetry/bootstrap/docs/dist/css/bootstrap-theme.min.css'
+        'bundles/ipoetry/js/jQuery-File-Upload-9.12.3/css/jquery.fileupload.css'
+         filter='cssrewrite' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}        
+    {% endblock %}            
+</head>
+<body id="body_container" class="user-profile" style="position: absolute; width:100%;height:100%;max-width:100%;max-height:100%;">
+    {#{{app.request.attributes.get('_route_params')['user']}}#}
+        {{ include('IpoetryBundle::baseheader.html.twig',{'userheaderInfo':userheaderInfo}) }}
+<div class="head-cover" style="background-image: url(img/profile-settings-bg.jpg)">
+		<div class="container">
+			<div class="head-inner clearfix">
+				<div class="head-cover-avatar">
+					<img src="{{userprofileowner.userPhotoUrl}}" alt="alt">
+				</div>
+				<div class="user-profile-top-right clearfix">
+					<div class="head-cover-title">{{userprofileowner.userName}} {{userprofileowner.userLastname}}</div>
+					<!--<div class="user-profile-favorite-item clearfix">-->
+                                            <input class="form-control" id="userstatustext" type="text" placeholder="Добавить статус" maxlength="1024" data-toggle="modal"  title="Введите статус" data-html="true" value="{{userprofileowner.userStatus}}"/>
+					<!--</div>-->
+					<div class="user-profile-favorite-item clearfix">
+					</div>
+					<button id="setusersubscriptionbtn" class="btn-white-border">Подписаться</button>
+					<button id="gotousernewsfeedbtn" class="btn-white-border">Смотреть ленту пользователя</button>
+                                        <button id="addpoembtn" class="btn-white-border" style="width: 277px;height: auto;">Добавить стихотворение</button>
+				</div> 
+				<a href="#" onclick="javascript:window.history.back(-1);return false;" class="back-link">Назад</a>
+			</div>
+		</div>
+	</div>
+<div class="main-wrap">
+		<div class="container clearfix">
+
+			<!-- Боковая панель -->
+			<aside>
+
+				<!-- Виджет боковой панели -->
+				<div class="aside-widget user-info-widget">
+
+					<!-- Информация о пользователе -->
+					<a href="#" class="aside-widget-title">{{userprofileowner.userName}} {{userprofileowner.userLastname}}</a>
+					<div class="aside-user-info">
+						<div class="aside-user-info-item rating-item">Топ-30 рейтинга Москвы</div>
+						<div class="aside-user-info-item sponsor-item">Спонсор</div>
+						<div class="aside-user-info-item map-item">{{userprofileowner.cityName}}</div>
+						<div class="aside-user-info-item years-item">{{userprofileowner.ipoetryUserAge}} лет</div>
+						<div class="aside-user-info-item link-item">{{userprofileowner.ipoetryUserWebsite}}</div>
+					</div>
+					<!-- Информация о пользователе -->
+
+				</div>
+				<!-- Виджет боковой панели конец-->
+
+				<!-- Виджет боковой панели -->
+				<div class="aside-widget clearfix">
+
+					<!-- Подписчики -->
+					<div class="clearfix">
+						<a href="{{path('IpoetryBundle_subscribers',{user:userprofileowner.userId,utype:'s'})}}" class="aside-widget-title subscriber">Подписчики <span>({{subscribers.userscount}})</span></a>
+						<a href="{{path('IpoetryBundle_subscribers',{user:userprofileowner.userId,utype:'f'})}}" class="aside-widget-you follower">Подписан <span>({{followers.userscount}})</span></a>
+					</div>
+                                                {% for subscriberitem in subscribers.userslist %}
+						<a href="{{ path('IpoetryBundle_unewsfeed',{'user' : subscriberitem.userId}) }}" class="subscribers-item">
+							<div class="subscribers-item-img-wrap">
+								<img alt="{{subscriberitem.userName}}{{subscriberitem.userLastname}}" src="{{subscriberitem.userPhotoUrl}}" width="50" height="50">
+							</div>
+							<div class="subscriber-item-name">{{subscriberitem.userName}} {{subscriberitem.userLastname}}</div>
+                                                    
+						</a>
+                                                {% endfor %}
+                                                {% for followeritem in followers.userslist %}
+						<a href="{{ path('IpoetryBundle_unewsfeed',{'user' : followeritem.userId}) }}" class="followers-item" style="display:none;">
+							<div class="followers-item-img-wrap">
+								<img alt="{{followeritem.userName}}{{followeritem.userLastname}}" src="{{followeritem.userPhotoUrl}}" width="50" height="50">
+							</div>
+							<div class="follower-item-name">{{followeritem.userName}} {{followeritem.userLastname}}</div>
+                                                    
+						</a>
+                                                {% endfor %}
+
+					<!-- Подписчики конец -->
+
+				</div>
+				<!-- Виджет боковой панели конец-->
+
+				<!-- Виджет боковой панели -->
+				<div class="aside-widget aside-widget-poem clearfix">
+
+					<!-- Лучшие стихи -->
+					<div class="clearfix">
+						<a href="#" class="aside-widget-title">Лучшие стихи <span>({{poetryratingcnt}})</span></a>
+					</div>
+                                        {% for poetryratingitem in poetryrating.poetriesratings %}
+					<div class="poem-item clearfix">
+                                                    <a href="#" class="poem-img-item-wrap">
+                                                            <img src="{{poetryratingitem.image_url}}" alt="alt">
+                                                    </a>
+                                                    <div class="poem-item-text">
+                                                            <a href="#" class="poem-item-title">{{poetryratingitem.poetryTitle}}</a>
+                                                            <div poetryId="{{poetryratingitem.poetryId}}" class="like">{{poetryratingitem.poetrylike}}</div>
+                                                            <div poetryId="{{poetryratingitem.poetryId}}" class="dislike">{{poetryratingitem.poetrydislike}}</div>
+                                                    </div>
+					</div>
+                                        {% endfor %}
+					<!-- Лучшие стихи конец -->
+
+				</div>
+				<!-- Виджет боковой панели конец-->
+
+				<!-- Виджет боковой панели -->
+				<div class="aside-widget clearfix" style="display:none;">
+
+					<!-- Группы -->
+					<div class="clearfix">
+						<a href="#" class="aside-widget-title">Группы <span>(12)</span></a>
+						<a href="#" class="aside-widget-you">Администратор <span>(20)</span></a>
+					</div>
+					<div class="groups-item clearfix">
+						<a href="#" class="groups-img-item-wrap">
+							<img src="img/group-ico.jpg" alt="alt">
+						</a>
+						<div class="groups-item-text">
+							<a href="#" class="groups-item-title">Встреча участников группы “Любовь”</a>
+							<div class="groups-item-subscribers">1 222 414 подписчиков</div>
+							<button class="btn-light-blue-bg">Подписаться</button>
+						</div>
+					</div>
+					<div class="groups-item clearfix">
+						<a href="#" class="groups-img-item-wrap">
+							<img src="img/group-ico2.jpg" alt="alt">
+						</a>
+						<div class="groups-item-text">
+							<a href="#" class="groups-item-title">Мастерклассы лучших писателей</a>
+							<div class="groups-item-subscribers">1 222 414 подписчиков</div>
+							<button class="btn-light-blue-bg">Подписаться</button>
+						</div>
+					</div>
+					<div class="groups-item clearfix">
+						<a href="#" class="groups-img-item-wrap">
+							<img src="img/group-ico3.jpg" alt="alt">
+						</a>
+						<div class="groups-item-text">
+							<a href="#" class="groups-item-title">Мастерклассы лучших писателей</a>
+							<div class="groups-item-subscribers">1 222 414 подписчиков</div>
+							<button class="btn-light-blue-bg">Подписаться</button>
+						</div>
+					</div>
+					<!-- Группы конец -->
+
+				</div>
+				<!-- Виджет боковой панели конец-->
+
+			</aside>
+			<!-- Боковая панель конец -->
+
+			<!-- Контент -->
+			<div class="content">
+				<a href="#" class="post-counter"><span>{{userfeedcnt}}</span> запись(и)</a>
+                        <!--контроллер angular-->
+                        <div ng-controller="unewsfeedController" ng-init="init({{app.request.attributes.get('_route_params')['user']}},{{uprofilenewsfeedlimit}},'{{ path('IpoetryBundle_unewsfeedentityajax') }}','{{app.request.getRequestUri}}')">
+
+				<!-- Добавить пост -->
+				<div class="add-post-wrap">
+					<form class="clearfix">
+						<textarea id="poetrymessage" placeholder="Добавить запись"></textarea>
+						<!--<div class="btn-add-post-img">Добавить фото</div>-->
+						<button id="poetrymessagebtn" class="btn-blue-bg" ng-click="addMessage('{{ path('IpoetryBundle_newmessageajax') }}');">Написать</button>
+					</form>
+				</div>
+				<!-- Добавить пост конец -->
+
+				<!-- Настройки ленты -->
+				<div class="feed-sorting clearfix">
+					<div class="feed-sorting-title">Настройте свою ленту:</div>
+					<div class="feed-sorting-items-wrap clearfix">
+						<div class="feed-sorting-item active" style="display:none;">темы</div>
+						<div class="feed-sorting-item" style="display:none;">город</div>
+						<div class="feed-sorting-item date-sorting-item">время
+							<div class="sorting-popup time-sorting">
+								<ul class="time-sorting-list">
+									<li style="list-style-type: none"><a href="#" ng-click="sortBy('poetrydailyrating.poetryRating','7',false);">Лучшее за неделю</a></li>
+									<li style="list-style-type: none"><a href="#" ng-click="sortBy('poetrydailyrating.poetryRating','30',false);">Лучшее за месяц</a></li>
+									<li style="list-style-type: none"><a href="#" ng-click="sortBy('poetrydailyrating.poetryRating','365',false);">Лучшее за все время</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Настройки ленты конец-->
+                            <div ng-repeat="unewsfeeditem in unewsfeed | orderBy:propertyName:reverse" postid="{% verbatim %}{{unewsfeeditem.poetry_id}}{% endverbatim %}" name="unewsfeedblock">
+
+				<!-- Пост в ленте пользователя-->
+				<div class="main-post-item" rating="{% verbatim %}{{unewsfeeditem.poetrydailyrating.poetryRating}}{% endverbatim %}">
+					<div class="main-post-item-top" style="background-image: url({% verbatim %}{{unewsfeeditem.image}}{% endverbatim %});background-repeat: no-repeat;background-position: center;-webkit-background-size: contain;-moz-background-size: contain;-o-background-size: contain;background-size: contain;">
+						<div class="main-post-item-top-inner">
+							<div class="main-post-category">
+								<div class="main-post-category-ico">
+									<img src="img/ico-heart.png" alt="alt">
+								</div>
+								<a href="#"></a>
+							</div>
+                                                    <a href="../unewsfeedentity/{% verbatim %}{{unewsfeeditem.poetryowneruserid}}{% endverbatim %}_{% verbatim %}{{unewsfeeditem.poetryoriginal_id}}{% endverbatim %}" class="main-post-title">{% verbatim %}{{unewsfeeditem.title}}{% endverbatim %}</a><br/>
+							<div ng-repeat="tag in unewsfeeditem.tags_only" class="main-post-tags" style="display:inline;width:80px;">
+								<a href="#" tagid="{% verbatim %}{{tag.tagid}}{% endverbatim %}">#{% verbatim %}{{tag.tagtext}}{% endverbatim %}</a>
+							</div>
+							<div class="main-post-item-info">
+								<div class="main-post-item-info-item post-views">{% verbatim %}{{unewsfeeditem.poetryViewers}}{% endverbatim %}</div>
+								<a href="#" class="main-post-item-info-item post-comments">{% verbatim %}{{unewsfeeditem.poetrypostscnt}}{% endverbatim %}</a>
+							</div>
+							<div class="main-post-more-details" ng-mouseover="shbutton($event);" ng-mouseleave="delbutton($event);" ng-show="ownershow">
+								<div class="show-more-details-inner-wrap" style="display: none; opacity: 1;">
+									<button postid="{% verbatim %}{{unewsfeeditem.poetry_id}}{% endverbatim %}" userid="{% verbatim %}{{unewsfeeditem.userid}}{% endverbatim %}" class="btn-white-border" ng-click="showModal($event);">Удалить</button> <!--ng-click="delelement($event);"-->
+								</div>
+							</div>
+							<div class="plagiat" style="display: none; opacity: 1;">Плагиат</div>
+						</div>
+					</div>
+					<div class="main-post-item-bottom clearfix">
+						<div class="main-post-item-author">
+							<a href="../user-profile/{% verbatim %}{{unewsfeeditem.poetryowneruserid}}{% endverbatim %}" class="main-post-item-author-img-wrap">
+                                                            <img src="{% verbatim %}{{unewsfeeditem.owneruphotourl}}{% endverbatim %}" alt="alt">
+							</a>
+							<div class="main-post-item-text clearfix">
+								<a href="#" class="main-post-item-author-name">{% verbatim %}{{unewsfeeditem.owneruname}} {{unewsfeeditem.ownerulastname}}{% endverbatim %}</a>
+								<div class="main-post-item-time">{% verbatim %}{{unewsfeeditem.created}}{% endverbatim %}</div>
+							</div>
+						</div>
+						<div class="main-post-item-social-panel clearfix">
+							<a href="#" class="post-social-item"><i class="fa fa-odnoklassniki" aria-hidden="true"></i></a>
+							<a href="#" class="post-social-item"><i class="fa fa-vk" aria-hidden="true"></i></a>
+							<a href="#" class="post-social-item"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+							<a href="#" class="post-social-item"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+						</div>
+						<div class="clearfix"></div>
+						<div class="main-post-poem-text clearfix">{% verbatim %}{{unewsfeeditem.comment}}{% endverbatim %}
+						</div>
+						<div class="main-post-likes-wrap">
+                                                    <div class="like" poetryid="{% verbatim %}{{unewsfeeditem.poetry_id}}{% endverbatim %}" ng-click="Likefunc($event,'up');">{% verbatim %}{{unewsfeeditem.like}}{% endverbatim %}</div>
+                                                    <div class="dislike" poetryid="{% verbatim %}{{unewsfeeditem.poetry_id}}{% endverbatim %}" ng-click="Likefunc($event,'down');">{% verbatim %}{{unewsfeeditem.dislike}}{% endverbatim %}</div>
+						</div>
+					</div>
+				</div>
+				<!-- Пост в ленте пользователя конец -->
+
+                            </div>
+                                <button id="getunewsfeedblockbtn" type="submit" class="btn-blue-bg" ng-click="moreuNewsfeed()">
+                                <span>{% trans %}%MoreFeeds%{% endtrans %}</span>
+                                </button>
+			</div>
+			<!-- Контент конец -->
+
+		</div>
+	</div>
+        <!--
+        <button id="setusersubscriptionbtn" type="submit" class="btn btn-primary start">
+                            <i class="glyphicon glyphicon-upload"></i>
+                            <span>Subscribe</span>
+        </button>
+        -->
+        <!--
+        
+        <div style="clear:both;"></div>
+        <button id="getuserfeedinfobtn" type="submit" class="btn btn-primary start" style="display:none;">
+                            <i class="glyphicon glyphicon-upload"></i>
+                            <span>Get user feed info</span>
+        </button>
+        <button id="repostitembtn" type="submit" class="btn btn-primary start" style="display:none;">
+                            <i class="glyphicon glyphicon-upload"></i>
+                            <span>Repost It</span>
+        </button>
+        -->
+
+        <input id="datapartnum" type="hidden" value="1"/>
+        {{ include('IpoetryBundle::basemodal1.html.twig') }}  
+<!-- Подвал -->
+        {{ include('IpoetryBundle::basefooter.html.twig') }}    
+{% block javascripts %}
+{% javascripts '@IpoetryBundle/Resources/public/js/jquery-1.11.0.min.js'
+'@IpoetryBundle/Resources/public/bootstrap/dist/js/bootstrap.min.js'
+'@IpoetryBundle/Resources/public/js/angular.min.js'
+'@IpoetryBundle/Resources/public/js/angular-animate.min.js'
+'@IpoetryBundle/Resources/public/js/angular-route.min.js'
+'@IpoetryBundle/Resources/public/js/fancybox/jquery.fancybox.pack.js'
+'@IpoetryBundle/Resources/public/js/unewsfeedapp.js'
+'@IpoetryBundle/Resources/public/js/w_load.js'
+'@IpoetryBundle/Resources/public/js/libs.js'
+'@IpoetryBundle/Resources/public/js/common.js'
+'@IpoetryBundle/Resources/public/js/angular-strap-2.3.6/dist/angular-strap.js'
+'@IpoetryBundle/Resources/public/js/angular-strap-2.3.6/dist/angular-strap.tpl.min.js'
+'@IpoetryBundle/Resources/public/js/angular-strap-2.3.6/src/modal/modal.js'
+'@IpoetryBundle/Resources/public/bootstrap/docs/assets/js/ie-emulation-modes-warning.js'
+'@IpoetryBundle/Resources/public/bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js'
+%}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+{% endblock %}
+<script type="text/javascript">
+    
+    String.prototype.escapeHTML = function() {
+            return this.replace(/&/g, "&amp;")
+                       .replace(/</g, "&lt;")
+                       .replace(/>/g, "&gt;")
+                       .replace(/"/g, "&quot;")
+                       .replace(/'/g, "&#039;");
+    }
+    function stripslashes(str) {
+        str = str.replace(/\\'/g, '\'');
+        str = str.replace(/\\"/g, '"');
+        str = str.replace(/\\0/g, '\0');
+        str = str.replace(/\\\\/g, '\\');
+        return str;
+    }
+    /*
+    function addMessage(){
+        var oReq = new XMLHttpRequest();
+        oReq.onreadystatechange = function() {
+        if (oReq.readyState === 4 && oReq.status === 200) {
+            response=JSON.parse(oReq.response);
+            if (response.result===1){
+                console.log(response.result+'sendmessage done');
+                ajaxdata='login_json={"type":"new_message","user":{{app.request.attributes.get('_route_params')['user']}}}';
+                console.log(ajaxdata);
+                $.ajax({
+                    url: '{{ path('IpoetryBundle_uprofileajax') }}',
+                    type: 'post',
+                    data: ajaxdata ,
+                    dataType: 'json',
+                    beforeSend: function() {},
+                    complete: function() {},
+                    success: function(json) {
+                        if (json['result']===1) {
+                            $('#poetrymessage').val('');
+                            console.log('AJAX_user_new_message result='+json['result']);
+                            return 1;
+                        } else {
+                            return 0;
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log('error AJAX_user_new_message ' + textStatus);
+                    }
+                });
+            } else
+                return 0;
+            }
+        };
+
+        //посылаем комментарий к стиху
+        oReq.open("POST", '{{ path('IpoetryBundle_newmessageajax') }}', true);
+        var blob = new Blob([$('#poetrymessage').val()], {type: 'text/plain'});
+        oReq.setRequestHeader("Content-Type", "text/plain");
+        oReq.send(blob);        
+    }
+    */
+    function checkUserLogged(){
+      if (Number($('.topline-user-wrap').eq(0).attr('dbid'))===-1) {
+        //скрываем возможность менять статус
+        $('#userstatustext').prop( "disabled", true );
+        $('#addpoembtn').fadeOut();
+      }
+ 
+    }
+    function checkUserFollowersCanReadStatus(){
+        ajaxdata='login_json={"type":"check_UserFollowersCanReadStatus","user":{{app.request.attributes.get('_route_params')['user']}}}';
+        console.log(ajaxdata);
+        url='{{ path('IpoetryBundle_uprofileajax') }}';
+        type='post';
+        dataType='json';
+        onsuccess=function(json) {
+            console.log('checkUserFollowersCanReadStatus',json['result']);
+            if (json['result']==1) {
+               //если пользователю разрешено читать стену пользователя то показываем ее
+            }
+            if (json['result']==0) {
+               //если пользователю запрещено читать стену пользователя то скрываем ее и выводи информационное окно
+               $('.content').fadeOut();
+               $('<div class="infomessage"><p>Для того чтобы читать стихи пользователя, необходимо стать его подписчиком.Для этого нажмите "ПОДПИСАТЬСЯ".</p></div>').insertAfter('aside');
+            }
+                
+        };
+        onerror=function(jqXHR, textStatus, errorThrown) {
+            console.log('error AJAX_add_user_subscribtion ' + textStatus);
+        };        
+        ajaxprototype(ajaxdata,url,type,dataType,onsuccess,onerror);        
+    }
+    function addUserSubscription(){
+        
+        //делаем запрос на добавление подписки на данного владельца профиля
+        //шлем AJAX
+        switch ($('#setusersubscriptionbtn').text()){
+            case 'Отписаться':
+                ajaxdata='login_json={"type":"del_you_followedby_profileowner","user":{{app.request.attributes.get('_route_params')['user']}}}';
+                break;
+            case 'Подписаться':
+                ajaxdata='login_json={"type":"add_you_followedby_profileowner","user":{{app.request.attributes.get('_route_params')['user']}}}';
+                break;
+        }
+        console.log(ajaxdata);
+        url='{{ path('IpoetryBundle_uprofileajax') }}';
+        type='post';
+        dataType='json';
+        onsuccess=function(json) {
+            console.log(json['result']);
+            if (json['result']===1) {
+               //скрываем кнопку если это собственный профиль пользователя
+               //$('#setusersubscriptionbtn').fadeOut();
+               $('#setusersubscriptionbtn').text('Отписаться');
+               console.log("you became followed by {{app.request.attributes.get('_route_params')['user']}}");
+            }
+            if (json['result']===-1) {
+               //скрываем кнопку если это собственный профиль пользователя
+               //$('#setusersubscriptionbtn').fadeOut();
+               $('#setusersubscriptionbtn').text('Подписаться');
+               console.log("you lost followed by {{app.request.attributes.get('_route_params')['user']}}");
+            }
+                
+        };
+        onerror=function(jqXHR, textStatus, errorThrown) {
+            console.log('error AJAX_add_user_subscribtion ' + textStatus);
+        };        
+        ajaxprototype(ajaxdata,url,type,dataType,onsuccess,onerror);
+    }
+    
+    function checkOwnProfile(){
+        
+        //делаем запрос о том, является ли профиль собственным для пользователя
+        //
+        //шлем AJAX
+        ajaxdata='login_json={"type":"get_user_own_profile","user":{{app.request.attributes.get('_route_params')['user']}}}';
+        console.log(ajaxdata);
+        $.ajax({
+        url: '{{ path('IpoetryBundle_uprofileajax') }}',
+        type: 'post',
+        data: ajaxdata,
+        //HTTP='login='+$('#login_login').val()+'&password='+$('#login_password').val()
+        //JSON='{"login":"'+$('#login_login').val()+'","password":"'+$('#login_password').val()+'"}'
+        dataType: 'json',
+        beforeSend: function() {},
+        complete: function() {},
+        success: function(json) {
+            console.log(json['result']);
+            if (json['result']==1) {
+                //скрываем кнопку если это собственный профиль пользователя
+                $('#setusersubscriptionbtn').fadeOut();
+            } else {
+                //скрываем блок с вводом сообщения
+                $('.add-post-wrap').eq(0).fadeOut();
+                //скрываем возможность менять статус
+                $('#userstatustext').prop( "disabled", true );
+                $('#addpoembtn').fadeOut();
+            }
+                
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log('error AJAX_user_feed_available ' + textStatus);
+        }
+        });
+
+    }
+    
+    function checkUserSubscribed(){
+        //проверяем статус подписки на владельца профиля
+        //шлем AJAX
+        ajaxdata='login_json={"type":"get_user_subscribed_status","user":{{app.request.attributes.get('_route_params')['user']}}}';
+        console.log(ajaxdata);
+        url='{{ path('IpoetryBundle_uprofileajax') }}';
+        type='post';
+        dataType='json';
+        onsuccess=function(json) {
+            console.log(json['result']);
+            if (json['result']==1) {
+               $('#setusersubscriptionbtn').text('Отписаться');
+               console.log("you already followed by {{app.request.attributes.get('_route_params')['user']}}");
+            }
+                
+        };
+        onerror=function(jqXHR, textStatus, errorThrown) {
+            console.log('error AJAX_user_subscribed_available ' + textStatus);
+        };
+        ajaxprototype(ajaxdata,url,type,dataType,onsuccess,onerror);
+        
+    }
+
+    function checkFeedAvailable(){
+        //делаем запрос о наличии у пользователя ленты со стихами/комментариями
+        //шлем AJAX
+        ajaxdata='login_json={"type":"get_user_feed_info","url":"{{app.request.getRequestUri}}","user":{{app.request.attributes.get('_route_params')['user']}},"datapart":'+$('#datapartnum').val()+'}';
+        //path(app.request.attributes.get('_route'))
+        console.log(ajaxdata);
+        url='{{ path('IpoetryBundle_uprofileajax') }}';
+        type='post';
+        dataType='json';
+        onsuccess=function(json) {
+            console.log(json['result']);
+            console.log(json['newsfeed']);
+            if (json['result']>0) {
+                console.log($('#datapartnum').val());
+                $( '<p>'+json['newsfeed']+'</p>' ).insertBefore('#getuserfeedinfobtn');
+                console.log('AJAX_user_feed_available result='+json['result']);
+                $('#datapartnum').val((Number($('#datapartnum').val())+1));
+                //location.href='{{ path('IpoetryBundle_uroom') }}';
+            }
+        };
+        onerror=function(jqXHR, textStatus, errorThrown) {
+            console.log('error AJAX_user_feed_available ' + textStatus);
+        };
+        ajaxprototype(ajaxdata,url,type,dataType,onsuccess,onerror);
+    }
+    
+    function PoetryRepost(ownerurl,poetryid,userid){
+        //делаем запрос на включение стиха в свою ленту
+        //шлем AJAX
+        ajaxdata=JSON.stringify({type:"repost_from_feed",url:ownerurl,poetry:poetryid,user:userid});
+        console.log(ajaxdata);
+        url='{{ path('IpoetryBundle_unewsfeedentityajax') }}';
+        type='post';
+        dataType='json';
+        onsuccess=function(json) {
+            console.log(json['result']);
+            if (json['result']>0) {
+                console.log('AJAX_PoetryRepost result='+json['result']);
+            }
+        };
+        onerror=function(jqXHR, textStatus, errorThrown) {
+            console.log('error AJAX_PoetryRepost result ' + textStatus);
+        };
+        ajaxprototype(ajaxdata,url,type,dataType,onsuccess,onerror);
+
+
+    /*
+        //делаем запрос о наличии у пользователя ленты со стихами/комментариями
+        //шлем AJAX
+        ajaxdata='login_json={"type":"repost_from_feed","url":"{{app.request.getRequestUri}}","user":{{app.request.attributes.get('_route_params')['user']}},"datapart":'+$('#datapartnum').val()+'}';
+        //path(app.request.attributes.get('_route'))
+        console.log(ajaxdata);
+        url='{{ path('IpoetryBundle_uprofileajax') }}';
+        type='post';
+        dataType='json';
+        onsuccess=function(json) {
+            console.log(json['result']);
+            console.log(json['newsfeed']);
+            if (json['result']>0) {
+                console.log($('#datapartnum').val());
+                $( '<p>'+json['newsfeed']+'</p>' ).insertBefore('#getuserfeedinfobtn');
+                console.log('AJAX_user_feed_available result='+json['result']);
+                $('#datapartnum').val((Number($('#datapartnum').val())+1));
+                //location.href='{{ path('IpoetryBundle_uroom') }}';
+            }
+        };
+        onerror=function(jqXHR, textStatus, errorThrown) {
+            console.log('error AJAX_user_feed_available ' + textStatus);
+        };
+        ajaxprototype(ajaxdata,url,type,dataType,onsuccess,onerror);
+    */
+    }
+    $(document).ready(function () {
+        {% block documentReady %}
+            $('#getuserfeedinfobtn').on('click',function (event){
+                event = event || window.event;
+
+                  if (event.preventDefault) { // если метод существует
+                    event.preventDefault(); // то вызвать его
+                  } else { // иначе вариант IE8-:
+                    event.returnValue = false;
+                  }
+                checkFeedAvailable();
+            });
+            $('#setusersubscriptionbtn').on('click',function (event){
+                event = event || window.event;
+
+                  if (event.preventDefault) { // если метод существует
+                    event.preventDefault(); // то вызвать его
+                  } else { // иначе вариант IE8-:
+                    event.returnValue = false;
+                  }
+                addUserSubscription();
+            });
+            $('#repostitembtn').on('click',function (event){
+                event = event || window.event;
+
+                  if (event.preventDefault) { // если метод существует
+                    event.preventDefault(); // то вызвать его
+                  } else { // иначе вариант IE8-:
+                    event.returnValue = false;
+                  }
+                PoetryRepost('unewsfeed/15',9,15);
+            });
+            //like к комментарию
+            $('button[name="PoetryLikebtn"]').each(function (index){
+                $(this).on('click',function () {
+                    console.log($(this).attr('commentid'));
+                    var oReq = new XMLHttpRequest();
+                    oReq.onreadystatechange = function() {
+                        //console.log(JSON.parse(oReq.responseText));
+                        if (oReq.readyState == 4 && oReq.status == 200) {
+                        }
+                    };
+                    //шлем доппараметры как json
+                    //отправляем like к комментарию
+                    oReq.open("POST", "{{ path('IpoetryBundle_unewsfeedentityajax') }}",true);
+                    oReq.setRequestHeader("Content-Type", "application/json");
+                    console.log("login_json="+JSON.stringify({type:"poetrylikerequest",poetry:poetryid,user:userid,updown:'up'}));
+                    oReq.send(JSON.stringify({type:"poetrylikerequest",poetry:poetryid,user:userid,updown:'up'}));
+                });
+            });
+            //dislike к коментарию
+            $('button[name="PoetryDisLikebtn"]').each(function (index){
+                $(this).on('click',function () {
+                    console.log($(this).attr('commentid'));
+                    var oReq = new XMLHttpRequest();
+                    oReq.onreadystatechange = function() {
+                        //console.log(JSON.parse(oReq.responseText));
+                        if (oReq.readyState == 4 && oReq.status == 200) {
+                        }
+                    };
+                    //шлем доппараметры как json
+                    //отправляем like к комментарию
+                    oReq.open("POST", "{{ path('IpoetryBundle_unewsfeedentityajax') }}",true);
+                    oReq.setRequestHeader("Content-Type", "application/json");
+                    console.log("login_json="+JSON.stringify({type:"poetrylikerequest",poetry:poetryid,user:userid,updown:'down'}));
+                    oReq.send(JSON.stringify({type:"poetrylikerequest",poetry:poetryid,user:userid,updown:'down'}));
+                });
+            });
+            $('.aside-widget-you.follower').eq(0).on('click',function(event){
+            event = event || window.event;
+
+              if (event.preventDefault) { // если метод существует
+                event.preventDefault(); // то вызвать его
+              } else { // иначе вариант IE8-:
+                event.returnValue = false;
+              }
+              $('.subscribers-item').fadeOut();
+              $('.followers-item').fadeIn();
+            });
+            $('.aside-widget-title.subscriber').eq(0).on('click',function(event){
+            event = event || window.event;
+
+              if (event.preventDefault) { // если метод существует
+                event.preventDefault(); // то вызвать его
+              } else { // иначе вариант IE8-:
+                event.returnValue = false;
+              }
+              $('.followers-item').fadeOut();
+              $('.subscribers-item').fadeIn();
+            });
+            $('#poetrymessagebtn').on('click',function(event){
+              event = event || window.event;
+
+              if (event.preventDefault) { // если метод существует
+                event.preventDefault(); // то вызвать его
+              } else { // иначе вариант IE8-:
+                event.returnValue = false;
+              }
+              console.log($('#poetrymessage').val());
+              if ($('#poetrymessage').val()==='') {
+                return 0;
+              } else {
+                //addMessage();
+              }
+            });
+            $('#gotousernewsfeedbtn').on('click',function(event){
+              event = event || window.event;
+
+              if (event.preventDefault) { // если метод существует
+                event.preventDefault(); // то вызвать его
+              } else { // иначе вариант IE8-:
+                event.returnValue = false;
+              }
+              document.location.assign('{{path('IpoetryBundle_unewsfeedall')}}');
+            });
+            $('#addpoembtn').on('click',function (event){
+                event = event || window.event;
+
+                  if (event.preventDefault) { // если метод существует
+                    event.preventDefault(); // то вызвать его
+                  } else { // иначе вариант IE8-:
+                    event.returnValue = false;
+                  }
+                  location.assign('{{ path('IpoetryBundle_addpoem') }}');
+            });
+ 
+            $('#userstatustext').on('click',function(event){
+              event = event || window.event;
+
+              if (event.preventDefault) { // если метод существует
+                event.preventDefault(); // то вызвать его
+              } else { // иначе вариант IE8-:
+                event.returnValue = false;
+              }
+              $('#inputUserStatusModal').modal('show'); 
+            });
+            $('#savestatusbtn').on('click',function(event){
+              event = event || window.event;
+
+              if (event.preventDefault) { // если метод существует
+                event.preventDefault(); // то вызвать его
+              } else { // иначе вариант IE8-:
+                event.returnValue = false;
+              }
+              console.log('savestatusbtn clicked');
+              //пускаем ajax запрос на изменение статуса
+                    var oReq = new XMLHttpRequest();
+                    oReq.onreadystatechange = function() {
+                        //console.log(JSON.parse(oReq.responseText));
+                        if (oReq.readyState == 4 && oReq.status == 200) {
+                            console.log(JSON.parse(oReq.response));
+                            $('#userstatustext').val($('#message-text').val());
+                        }
+                    };
+                    //шлем доппараметры как json
+                    //отправляем like к комментарию
+                    oReq.open("POST", "{{ path('IpoetryBundle_unewsfeedentityajax') }}",true);
+                    oReq.setRequestHeader("Content-Type", "application/json");
+                    console.log("login_json="+JSON.stringify({type:"add_user_status",status:$('#message-text').val()}));
+                    oReq.send(JSON.stringify({type:"add_user_status",status:$('#message-text').val()}));
+                    $('#inputUserStatusModal').modal('hide');
+            });
+            checkOwnProfile();
+            checkUserSubscribed();
+            checkUserLogged();
+            checkUserFollowersCanReadStatus()
+        {{ include('IpoetryBundle::basejs.html.twig') }}
+        {% endblock documentReady %}
+    });
+</script>
+
+</body>
+</html>

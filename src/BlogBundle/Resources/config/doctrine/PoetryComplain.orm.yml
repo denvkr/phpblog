@@ -1,0 +1,34 @@
+IpoetryBundle\Entity\PoetryComplain:
+    type: entity
+    table: poetry_complain
+    id:
+        complainId:
+            type: integer
+            nullable: false
+            strategy: IDENTITY
+            options:
+                unsigned: false
+            id: true
+            column: complain_id
+    fields:
+        userId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            column: user_id
+        poetryId:
+            type: integer
+            nullable: false
+            options:
+                fixed: false
+                default: 0
+            column: poetry_id
+        complainText:
+            type: string
+            nullable: true
+            length: 1024
+            default: 'undefined'
+            options:
+                fixed: false
+            column: complain_text

@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru" xml:lang="ru">
+<head>
+<title>ipoetry-личный кабинет просмотр своей ленты</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="Keywords" content="" />
+<meta name="description" content="Просмотр стихотворений подписантов ipoetry" />
+<meta name="robots" content="index,follow" />
+
+    {% block stylesheets %}
+        {% stylesheets 'bundles/ipoetry/css/screen.css'
+        'bundles/ipoetry/css/style.css'
+        'bundles/ipoetry/bootstrap/docs/dist/css/bootstrap.min.css'
+        'bundles/ipoetry/bootstrap/docs/dist/css/bootstrap-theme.min.css'
+        'bundles/ipoetry/js/jQuery-File-Upload-9.12.3/css/jquery.fileupload.css'
+         filter='cssrewrite' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />     
+        {% endstylesheets %}        
+    {% endblock %}            
+</head>
+<body id="body_container" style="position: absolute; width:100%;height:100%;max-width:100%;max-height:100%;"> <!--//onload="javascript:Dimension();" width: 1160px; height: 800px;visibility:hidden;-->
+    <!--{{app.request.attributes.get('_route_params')['user']}}-->    
+    <!--    <button id="setusersubscriptionbtn" type="submit" class="btn btn-primary start">
+                            <i class="glyphicon glyphicon-upload"></i>
+                            <span>Subscribe</span>
+        </button>
+        <div style="clear:both;"></div>
+    -->
+        <button type="button" parentcommentid="1" commentid="2" name="PoetryLikebtn" class="btn btn-sm btn-primary" style="display:inline;">Like</button>
+        <button type="button" parentcommentid="1" commentid="2" name="PoetryDisLikebtn" class="btn btn-sm btn-primary" style="display:inline;">Dislike</button>
+    
+        <button id="getuserfeedinfobtn" type="submit" class="btn btn-primary start">
+                            <i class="glyphicon glyphicon-upload"></i>
+                            <span>Get user feed info</span>
+        </button>
+        <input id="datapartnum" type="hidden" value="1"/>
+    
+{% block javascripts %}
+{% javascripts '@IpoetryBundle/Resources/public/js/jquery-1.11.0.min.js'
+'@IpoetryBundle/Resources/public/bootstrap/dist/js/bootstrap.min.js'
+'@IpoetryBundle/Resources/public/js/w_load.js'
+'@IpoetryBundle/Resources/public/bootstrap/docs/assets/js/ie-emulation-modes-warning.js'
+'@IpoetryBundle/Resources/public/bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js'
+%}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+{% endblock %}
+<script type="text/javascript">
+    
+    String.prototype.escapeHTML = function() {
+            return this.replace(/&/g, "&amp;")
+                       .replace(/</g, "&lt;")
+                       .replace(/>/g, "&gt;")
+                       .replace(/"/g, "&quot;")
+                       .replace(/'/g, "&#039;");
+    }
+    function stripslashes(str) {
+        str = str.replace(/\\'/g, '\'');
+        str = str.replace(/\\"/g, '"');
+        str = str.replace(/\\0/g, '\0');
+        str = str.replace(/\\\\/g, '\\');
+        return str;
+    }
+    
+    function checkOwnProfile(){
+        
+        //делаем запрос о том, является ли профиль собственным для пользователя
+        //
+        //шлем AJAX
+        ajaxdata='login_json={"type":"get_user_own_profile","user":{{app.request.attributes.get('_route_params')['user']}}}';
+        console.log(ajaxdata);
+        onsuccess=function(json) {
+            console.log(json['result']);
+            if (json['result']==1) {
+               //скрываем кнопку если это собственный профиль пользователя
+               $('#setusersubscriptionbtn').fadeOut();
+            }
+                
+        };
+        onerror=function(jqXHR, textStatus, errorThrown) {
+            console.log('error AJAX_user_feed_available ' + textStatus);
+        };
+        ajaxprototype(ajaxdata,url,type,dataType,onsuccess,onerror);
+
+    }
+
+    function checkFollowersFeedAvailable(){
+        //делаем запрос о наличии у пользователя ленты со стихами/комментариями
+        //шлем AJAX
+        ajaxdata='login_json={"type":"get_followers_user_feed_info","user":"{{app.request.attributes.get('_route_params')['user']}}","datapart":'+$('#datapartnum').val()+'}';
+        console.log(ajaxdata);
+        url='{{ path('IpoetryBundle_uprofileajax') }}';
+        type='post';
+        dataType='json';
+        onsuccess=function(json) {
+            console.log(json['result']);
+            console.log(json['newsfeed']);
+            if (json['result']>0) {
+                console.log($('#datapartnum').val());
+                $( '<p>'+json['newsfeed']+'</p>' ).insertBefore('#getuserfeedinfobtn');
+                console.log('AJAX_userFollowers_feed_available result='+json['result']);
+                $('#datapartnum').val((Number($('#datapartnum').val())+1));
+                //location.href='{{ path('IpoetryBundle_uroom') }}';
+            }
+        };
+        onerror=function(jqXHR, textStatus, errorThrown) {
+            console.log('error AJAX_userFollowers_feed_available ' + textStatus);
+        };
+        ajaxprototype(ajaxdata,url,type,dataType,onsuccess,onerror);
+    }
+  
+    $(document).ready(function () {
+        {% block documentReady %}
+            $('#getuserfeedinfobtn').on('click',function (event){
+                event = event || window.event;
+
+                  if (event.preventDefault) { // если метод существует
+                    event.preventDefault(); // то вызвать его
+                  } else { // иначе вариант IE8-:
+                    event.returnValue = false;
+                  }
+                checkFollowersFeedAvailable();
+            });
+            $('#setusersubscriptionbtn').on('click',function (event){
+                event = event || window.event;
+
+                  if (event.preventDefault) { // если метод существует
+                    event.preventDefault(); // то вызвать его
+                  } else { // иначе вариант IE8-:
+                    event.returnValue = false;
+                  }
+                addUserSubscription();
+            });
+            //like к комментарию
+            $('button[name="PoetryLikebtn"]').each(function (index){
+                $(this).on('click',function () {
+                    console.log($(this).attr('commentid'));
+                    poetryid=1;
+                    userid=16;
+                    var oReq = new XMLHttpRequest();
+                    oReq.onreadystatechange = function() {
+                        //console.log(JSON.parse(oReq.responseText));
+                        if (oReq.readyState == 4 && oReq.status == 200) {
+                        }
+                    };
+                    //шлем доппараметры как json
+                    //отправляем like к комментарию
+                    oReq.open("POST", "{{ path('IpoetryBundle_unewsfeedentityajax') }}",true);
+                    oReq.setRequestHeader("Content-Type", "application/json");
+                    console.log("login_json="+JSON.stringify({type:"poetrylikerequest",poetry:poetryid,user:userid,updown:'up'}));
+                    oReq.send(JSON.stringify({type:"poetrylikerequest",poetry:poetryid,user:userid,updown:'up'}));
+                });
+            });
+            //dislike к коментарию
+            $('button[name="PoetryDisLikebtn"]').each(function (index){
+                $(this).on('click',function () {
+                    console.log($(this).attr('commentid'));
+                    poetryid=1;
+                    userid=16;
+                    var oReq = new XMLHttpRequest();
+                    oReq.onreadystatechange = function() {
+                        //console.log(JSON.parse(oReq.responseText));
+                        if (oReq.readyState == 4 && oReq.status == 200) {
+                        }
+                    };
+                    //шлем доппараметры как json
+                    //отправляем like к комментарию
+                    oReq.open("POST", "{{ path('IpoetryBundle_unewsfeedentityajax') }}",true);
+                    oReq.setRequestHeader("Content-Type", "application/json");
+                    console.log("login_json="+JSON.stringify({type:"poetrylikerequest",poetry:poetryid,user:userid,updown:'down'}));
+                    oReq.send(JSON.stringify({type:"poetrylikerequest",poetry:poetryid,user:userid,updown:'down'}));
+                });
+            });
+
+            //checkOwnProfile();
+            //checkUserSubscribed();
+        {% endblock documentReady %}
+    });
+</script>
+
+</body>
+</html>

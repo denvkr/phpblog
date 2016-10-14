@@ -1,0 +1,26 @@
+IpoetryBundle\Entity\CommentDisLike:
+    type: entity
+    table: commentdislike
+    id:
+        dislikeId:
+            type: integer
+            nullable: false
+            strategy: IDENTITY
+            options:
+                unsigned: false
+            id: true
+            column: dislike_id
+    fields:
+        userId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            column: user_id
+        commentId:
+            type: integer
+            nullable: false
+            options:
+                fixed: false
+                default: 0
+            column: comment_id

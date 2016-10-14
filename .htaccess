@@ -1,0 +1,20 @@
+
+DirectoryIndex index.php
+
+Options -Indexes 
+
+Options +FollowSymLinks
+RewriteEngine On
+
+#Options FollowSymLinks
+
+#Options SymLinksIfOwnerMatch
+#RewriteCond %{REQUEST_URI} !^/index.php$
+#RewriteRule ^(.+)$  "/class/routeprocessor.php?url=$1" [NC,L]
+#RewriteCond %{REQUEST_URI} ^/adminblogs$
+#RewriteRule ^(.*)$ "/templates/adminblogs.php" [R=301,L]
+#RewriteCond %{REQUEST_URI} ^/blog(\d+)_(\d+)$
+#RewriteRule ^(.*)$ "/templates/blog.php" [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^/blog/(\d+)_(\d+)$
+RewriteRule ^(.+)$  "index.php?url=$1" [NC,L]

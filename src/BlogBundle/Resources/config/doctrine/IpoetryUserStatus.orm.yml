@@ -1,0 +1,41 @@
+IpoetryBundle\Entity\IpoetryUserStatus:
+    type: entity
+    table: ipoetry_user_status
+    id:
+        ipoetryUserStatusId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ipoetry_user_status_id
+            generator:
+                strategy: AUTO
+    fields:
+        ipoetryUserStatus:
+            type: string
+            nullable: true
+            length: 45
+            options:
+                fixed: false
+                default: undefined
+            column: ipoetry_user_status
+        ipoetryUserUserParentId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            column: ipoetry_user_user_parent_id
+    manyToOne:
+        ipoetryUserUser:
+            targetEntity: IpoetryUser
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ipoetry_user_user_id:
+                    referencedColumnName: user_id
+            orphanRemoval: false
+
+    lifecycleCallbacks: {  }

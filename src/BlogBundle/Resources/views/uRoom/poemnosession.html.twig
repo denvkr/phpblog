@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru" xml:lang="ru">
+<head>
+<title>ipoetry-стихотворение</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="Keywords" content="" />
+<meta name="description" content="Читать стихотворение в ipoetry" />
+<meta name="robots" content="index,follow" />
+
+    {% block stylesheets %}
+        {% stylesheets 'bundles/ipoetry/css/screen.css'
+        'bundles/ipoetry/css/style.css'
+        'bundles/ipoetry/bootstrap/docs/dist/css/bootstrap.min.css'
+        'bundles/ipoetry/bootstrap/docs/dist/css/bootstrap-theme.min.css'
+        'bundles/ipoetry/js/jQuery-File-Upload-9.12.3/css/jquery.fileupload.css'
+         filter='cssrewrite' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />     
+        {% endstylesheets %}        
+    {% endblock %}
+</head>
+<body id="body_container" style="position: absolute; width:100%;height:100%;max-width:100%;max-height:100%;"> <!--//onload="javascript:Dimension();" width: 1160px; height: 800px;visibility:hidden;-->
+{% block body %}
+<!-- Верхняя панель -->
+{{ include('IpoetryBundle::baseheader.html.twig',{'userheaderInfo':userheaderInfo}) }}
+<div class="container-fluid">
+<div class="row">
+      <div class="col-md-1" style="height:200px;"></div>
+</div>
+<!-- Подвал -->
+{{ include('IpoetryBundle::basefooter.html.twig') }}
+{% endblock %}
+{% block javascripts %}
+{% javascripts '@IpoetryBundle/Resources/public/js/jquery-1.11.0.min.js'
+'@IpoetryBundle/Resources/public/bootstrap/dist/js/bootstrap.min.js'
+'@IpoetryBundle/Resources/public/bootstrap/dist/js/bootstrap.min.js'
+'@IpoetryBundle/Resources/public/js/angular.min.js'
+'@IpoetryBundle/Resources/public/js/angular-animate.min.js'
+'@IpoetryBundle/Resources/public/js/angular-route.min.js'
+'@IpoetryBundle/Resources/public/js/fancybox/jquery.fancybox.pack.js'
+'@IpoetryBundle/Resources/public/js/unewsfeedallapp.js'
+'@IpoetryBundle/Resources/public/js/w_load.js'
+'@IpoetryBundle/Resources/public/js/libs.js'
+'@IpoetryBundle/Resources/public/js/common.js'
+'@IpoetryBundle/Resources/public/js/angular-strap-2.3.6/dist/angular-strap.js'
+'@IpoetryBundle/Resources/public/js/angular-strap-2.3.6/dist/angular-strap.tpl.min.js'
+'@IpoetryBundle/Resources/public/js/angular-strap-2.3.6/src/modal/modal.js'
+'@IpoetryBundle/Resources/public/bootstrap/docs/assets/js/ie-emulation-modes-warning.js'
+'@IpoetryBundle/Resources/public/bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js'
+%}
+
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+{% endblock %}
+<script type="text/javascript">
+    $(document).ready(function () {
+        {% block documentReady %}
+        {{ include('IpoetryBundle::basejs.html.twig') }}
+        {% endblock documentReady %}
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html"; charset=utf-8" />
+        <title>{% block title %}ipoetry admin panel{% endblock %}</title>
+        <!--[if lt IE 9]>
+            <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+    {% block stylesheets %}
+        {% stylesheets 'bundles/ipoetry/css/screen.css'
+        'bundles/ipoetry/css/style.css'
+        'bundles/ipoetry/bootstrap/docs/dist/css/bootstrap.min.css'
+        'bundles/ipoetry/bootstrap/docs/dist/css/bootstrap-theme.min.css'
+        'bundles/ipoetry/js/jQuery-File-Upload-9.12.3/css/jquery.fileupload.css'
+         filter='cssrewrite' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />     
+        {% endstylesheets %}        
+    {% endblock %}            
+        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
+    </head>
+    <body>
+        <div class="container-fluid">
+        <section id="wrapper">    
+            <section class="main-col">
+                {% block body %}
+                    <div style="text-height: 15px;">Панель администрирования | <a href="{{ path('IpoetryBundle_root') }}">На главную</a></div>
+                    
+                <ul class="nav nav-tabs">
+                  <li role="presentation" class="admtab active"><a href="#">База данных</a></li>
+                  <li role="presentation" class="admtab"><a href="#">Пользователь</a></li>
+                </ul>
+
+                <div tabno="0" class="left-block undertab" style="position:absolute;display:inline;margin-top:5px;border:1px solid #ddd;height:768px;width:300px;">
+                    <div style="height:50px;">    
+                    </div>
+                    <button id="delmessagesbtn" class="btn btn-danger">1. Удалить сообщения из ленты</button>
+                    <div style="height:50px;">    
+                    </div>
+
+                </div>
+                <div tabno="1" class="left-block undertab" style="position:absolute;margin-top:5px;border:1px solid #ddd;height:768px;width:300px;display:none;">
+                    <div style="height:50px;">    
+                    </div>
+                    <button class="btn btn-danger">1. Удалить пользователя</button>
+                    <div style="height:50px;">    
+                    </div>
+
+                </div>
+                {% endblock %}
+            </section>
+            <aside class="sidebar">
+                {% block sidebar %}
+                {% endblock %}
+            </aside>
+            <div id="footer" class="center-block" style="position:relative;top:780px;width:80px;">
+                {% block footer %}
+                    ipoetry 2016
+                {% endblock %}
+            </div>
+        </section>
+        </div>
+{% block javascripts %}
+{% javascripts '@IpoetryBundle/Resources/public/js/jquery-1.11.0.min.js'
+'@IpoetryBundle/Resources/public/bootstrap/js/tab.js'
+'@IpoetryBundle/Resources/public/bootstrap/dist/js/bootstrap.min.js'
+'@IpoetryBundle/Resources/public/js/angular.min.js'
+'@IpoetryBundle/Resources/public/js/angular-animate.min.js'
+'@IpoetryBundle/Resources/public/js/angular-route.min.js'
+'@IpoetryBundle/Resources/public/js/fancybox/jquery.fancybox.pack.js'
+'@IpoetryBundle/Resources/public/js/w_load.js'
+'@IpoetryBundle/Resources/public/js/libs.js'
+'@IpoetryBundle/Resources/public/js/common.js'
+'@IpoetryBundle/Resources/public/js/angular-strap-2.3.6/dist/angular-strap.js'
+'@IpoetryBundle/Resources/public/js/angular-strap-2.3.6/dist/angular-strap.tpl.min.js'
+'@IpoetryBundle/Resources/public/js/moment-with-locales.min.js'
+'@IpoetryBundle/Resources/public/js/angular-strap-2.3.6/src/modal/modal.js'
+'@IpoetryBundle/Resources/public/bootstrap/docs/assets/js/ie-emulation-modes-warning.js'
+'@IpoetryBundle/Resources/public/bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js'
+%}
+<script type="text/javascript" src="{{ asset_url }}">
+</script>
+{% endjavascripts %}
+<script type="text/javascript">
+     function DetAllMessages(){
+        //делаем запрос о наличии у пользователя ленты со стихами/комментариями
+        //шлем AJAX
+        //ajaxdata='main_json={"type":"get_all_newsfeed","user":"all","datapart":'+$('#datapartnum').val()+'}';
+        ajaxdata=JSON.stringify({type:"del_all_messages"});
+        console.log(ajaxdata);
+        url='{{ path('IpoetryBundle_mainajax') }}';
+        type='post';
+        dataType='json';
+        onsuccess=function(json) {
+            if (json['result']==1) {
+                $( '<p>Сообщения удалены из ленты.</p>' ).insertAfter('.btn.btn-danger').eq(0);
+            }
+        };
+        onerror=function(jqXHR, textStatus, errorThrown) {
+            console.log('error AJAX_userFollowers_feed_available ' + textStatus);
+        };
+        ajaxprototype(ajaxdata,url,type,dataType,onsuccess,onerror);
+    }
+
+    $(document).ready(function () {
+    //$('.admtab').eq(0).addClass('active');
+    
+    {% block documentReady %}
+        $('.admtab a').each(function(indx){
+          $(this).click(function (e) {
+            e.preventDefault();
+            $('.admtab').toggleClass('active');
+            $('.undertab').fadeOut();
+            $(this).tab('show');         
+            $(this).prev().addClass('active');
+            $('div[tabno="'+indx+'"]').fadeIn();
+            console.log(indx);
+          });
+        });
+        $('#delmessagesbtn').click(function (e) {
+            DetAllMessages();
+        });
+        {{ include('IpoetryBundle::basejs.html.twig') }}
+    {% endblock documentReady %}
+    });
+</script>
+{% endblock %}
+
+    </body>
+</html>

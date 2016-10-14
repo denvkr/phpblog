@@ -1,0 +1,29 @@
+IpoetryBundle\Entity\DailyPoetryRating:
+    type: entity
+    table: daily_poetry_rating
+    repositoryClass: IpoetryBundle\Entity\Repository\DailyPoetryRatingRepository
+    id:
+        poetryId:
+            type: integer
+            nullable: false
+            strategy: IDENTITY
+            options:
+                unsigned: false
+            id: true
+            column: poetry_id
+    fields:
+        cDate:
+            type: string
+            nullable: false
+            length: 10
+            default: 'undefined'
+            options:
+                fixed: false
+            column: cdate
+        poetryRating:
+            type: integer
+            nullable: true
+            options:
+                fixed: false
+                default: 0
+            column: poetry_rating

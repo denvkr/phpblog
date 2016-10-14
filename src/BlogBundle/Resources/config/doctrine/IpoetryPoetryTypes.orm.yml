@@ -1,0 +1,23 @@
+IpoetryBundle\Entity\IpoetryPoetryTypes:
+    type: entity
+    table: ipoetry_poetry_types
+    id:
+        ipoetryPoetryTypesId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ipoetry_poetry_types_id
+            generator:
+                strategy: IDENTITY
+    fields:
+        ipoetryPoetryTypes:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+                default: undefined
+            column: ipoetry_poetry_types
+    lifecycleCallbacks: {  }

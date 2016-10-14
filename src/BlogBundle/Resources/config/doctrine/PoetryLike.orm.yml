@@ -1,0 +1,26 @@
+IpoetryBundle\Entity\PoetryLike:
+    type: entity
+    table: poetrylike
+    id:
+        likeId:
+            type: integer
+            nullable: false
+            strategy: IDENTITY
+            options:
+                unsigned: false
+            id: true
+            column: like_id
+    fields:
+        userId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            column: user_id
+        poetryId:
+            type: integer
+            nullable: false
+            options:
+                fixed: false
+                default: 0
+            column: poetry_id

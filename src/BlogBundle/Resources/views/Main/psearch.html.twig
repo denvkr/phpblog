@@ -1,0 +1,240 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru" xml:lang="ru" ng-app="psearchApp">
+<head>
+<title>ipoetry-поиск стихов и комментариев</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="Keywords" content="" />
+<meta name="description" content="поиск стихов и комментариев в ipoetry" />
+<meta name="robots" content="index,follow" />
+
+    {% block stylesheets %}
+        {% stylesheets 'bundles/ipoetry/css/screen.css'
+        'bundles/ipoetry/css/style.css'
+        'bundles/ipoetry/bootstrap/docs/dist/css/bootstrap.min.css'
+        'bundles/ipoetry/bootstrap/docs/dist/css/bootstrap-theme.min.css'
+        'bundles/ipoetry/js/jQuery-File-Upload-9.12.3/css/jquery.fileupload.css'
+         filter='cssrewrite' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+    {% endblock %}
+</head>
+<body id="body_container" style="position: absolute; width:100%;height:100%;max-width:100%;max-height:100%;"> <!--//onload="javascript:Dimension();" width: 1160px; height: 800px;visibility:hidden;-->
+    <!--    <button id="setusersubscriptionbtn" type="submit" class="btn btn-primary start">
+                            <i class="glyphicon glyphicon-upload"></i>
+                            <span>Subscribe</span>
+        </button>
+        <div style="clear:both;"></div>
+    -->
+        {{ include('IpoetryBundle::baseheader.html.twig',{'userheaderInfo':userheaderInfo}) }}
+<div ng-controller="PoetrySearchController" ng-init="init({{poetrysearchlimit}})">
+        
+    <div class="top-info-panel">
+                    <div class="container clearfix">
+                            <div class="top-info-panel-title">Поиск по стихотворениям и постам</div>
+                            <div class="top-info-panel-search-wrap">
+                                    <form>
+                                        <div class="input-group">
+                                          <input id="searchedpoetriestext" name="searchedpoetriestext" ng-model="searchedpoetriestext.text" type="text" placeholder="Введите название стиха или поста"/>
+                                            <button id="searchresultbtn" name="searchresultbtn" ng-click="addPoetrySearch('{{ path('IpoetryBundle_mainajax') }}')"></button>
+                                        </div><!-- /input-group -->
+                                    </form>
+                            </div>
+                            <a href="#" onclick="javascript:window.history.back(-1);return false;" class="back-link">Назад</a>
+                    </div>
+    </div>
+
+      <!--<form>
+        <div class="input-group">
+          <input id="searchedpoetriestext" name="searchedpoetriestext" ng-model="searchedpoetriestext.text" type="text" class="form-control" placeholder="Search for..."/>
+          <span class="input-group-btn">
+            <button id="searchresultbtn" name="searchresultbtn" class="btn btn-default" ng-click="addPoetrySearch('{{ path('IpoetryBundle_mainajax') }}')">Go!</button>
+          </span>
+        </div>
+      </form>-->
+		<!-- Верхняя информационная панель конец -->
+
+		<!-- Главный контейнер -->
+		<div class="main-wrap">
+			<div class="container clearfix">
+
+				<!-- Контент -->
+				<div class="content">
+
+					<!-- Результаты фильтрации -->
+					<div class="tab_content">
+
+						<!-- Вкладка -->
+						<div class="tab_item" style="display: block;">
+
+                                                    <div ng-repeat="searchedpoetry in searchedpoetries" postid="{% verbatim %}{{searchedpoetry.poetry_id}}{% endverbatim %}" name="unewsfeedblock">
+
+                                                        <!-- Пост в ленте пользователя-->
+                                                        <div class="main-post-item" rating="{% verbatim %}{{searchedpoetry.poetrydailyrating.poetryRating}}{% endverbatim %}">
+                                                                <div class="main-post-item-top" style="background-image: url({% verbatim %}{{searchedpoetry.image}}{% endverbatim %});background-repeat: no-repeat;background-position: center;-webkit-background-size: contain;-moz-background-size: contain;-o-background-size: contain;background-size: contain;">
+                                                                        <div class="main-post-item-top-inner">
+                                                                            <div class="main-post-add-time">{% verbatim %}{{searchedpoetry.created | moment: 'fromNow'}}{% endverbatim %} в {% verbatim %}{{searchedpoetry.created | moment: "format":"LT"}}{% endverbatim %}</div>
+                                                                            <a href="../app_dev.php/unewsfeedentity/{% verbatim %}{{searchedpoetry.userid}}{% endverbatim %}_{% verbatim %}{{searchedpoetry.poetry_id}}{% endverbatim %}" class="main-post-title">{% verbatim %}{{searchedpoetry.title}}{% endverbatim %}</a><br/>
+                                                                                <div ng-repeat="tag in searchedpoetry.tags_only" class="main-post-tags" style="display:inline;width:80px;">
+                                                                                         <a href="#" tagid="{% verbatim %}{{tag.tagid}}{% endverbatim %}">#{% verbatim %}{{tag.tagtext}}{% endverbatim %}</a>
+                                                                                </div>
+                                                                                <div class="main-post-item-info">
+                                                                                        <div class="main-post-item-info-item post-views">{% verbatim %}{{searchedpoetry.poetryViewers}}{% endverbatim %}</div>
+                                                                                        <a href="#" class="main-post-item-info-item post-comments">{% verbatim %}{{searchedpoetry.poetrypostscnt}}{% endverbatim %}</a>
+                                                                                </div>
+                                                                                <div class="main-post-more-details" ng-mouseover="shbutton($event);" ng-mouseleave="delbutton($event);" ng-show="ownershow" getbodyelem>
+                                                                                        <div class="show-more-details-inner-wrap" style="display: none; opacity: 1;">
+                                                                                                <button postid="{% verbatim %}{{searchedpoetry.poetry_id}}{% endverbatim %}" userid="{% verbatim %}{{searchedpoetry.userid}}{% endverbatim %}" class="btn-white-border del" ng-click="showModal($event);" value="{% verbatim %}{{delbtnname}}{% endverbatim %}">{% verbatim %}{{delbtnname}}{% endverbatim %}</button> <!--ng-click="delelement($event);"-->
+                                                                                        </div>
+                                                                                </div>
+                                                                                <div class="plagiat" style="display: none; opacity: 1;">Плагиат</div>
+                                                                        </div>
+                                                                </div>
+                                                                <div class="main-post-item-bottom clearfix">
+                                                                        <div class="main-post-item-author">
+                                                                                <a href="../user-profile/{% verbatim %}{{searchedpoetry.userid}}{% endverbatim %}" class="main-post-item-author-img-wrap">
+                                                                                    <img src="{% verbatim %}{{searchedpoetry.uphotourl}}{% endverbatim %}" alt="alt">
+                                                                                </a>
+                                                                                <div class="main-post-item-text clearfix">
+                                                                                        <a href="#" class="main-post-item-author-name">{% verbatim %}{{searchedpoetry.owneruname}} {{searchedpoetry.ownerulastname}}{% endverbatim %}</a>
+                                                                                        <div class="main-post-item-time" style="display:none">{% verbatim %}{{searchedpoetry.created}}{% endverbatim %}</div>
+                                                                                </div>
+                                                                        </div>
+                                                                        <div class="main-post-item-social-panel clearfix">
+                                                                                <a href="#" class="post-social-item"><i class="fa fa-odnoklassniki" aria-hidden="true"></i></a>
+                                                                                <a href="#" class="post-social-item"><i class="fa fa-vk" aria-hidden="true"></i></a>
+                                                                                <a href="#" class="post-social-item"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                                                                                <a href="#" class="post-social-item"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                                                                        </div>
+                                                                        <div class="clearfix"></div>
+                                                                        <div class="main-post-poem-text clearfix">{% verbatim %}{{searchedpoetry.comment}}{% endverbatim %}
+                                                                        <div class="main-post-item-recommend recommend-smoke-bg" style="display: {% verbatim %}{{searchedpoetry.recommendvisibility}}{% endverbatim %}; opacity: 1;">iPoetry рекомендует</div>    
+                                                                        </div>
+                                                                        <div class="main-post-likes-wrap">
+                                                                            <div class="like" poetryid="{% verbatim %}{{searchedpoetry.poetry_id}}{% endverbatim %}" ng-click="Likefunc($event,'{{ path('IpoetryBundle_unewsfeedentityajax') }}','up');">{% verbatim %}{{searchedpoetry.like}}{% endverbatim %}</div>
+                                                                            <div class="dislike" poetryid="{% verbatim %}{{searchedpoetry.poetry_id}}{% endverbatim %}" ng-click="Likefunc($event,'{{ path('IpoetryBundle_unewsfeedentityajax') }}','down');">{% verbatim %}{{searchedpoetry.dislike}}{% endverbatim %}</div>
+                                                                        </div>
+                                                                </div>
+                                                        </div>
+                                                        <!-- Пост в ленте пользователя конец -->
+						</div>
+						<!-- Вкладка конец -->
+					</div>
+					<!-- Результаты фильтрации конец-->
+				</div>
+                                <button id="getsearchresultblockbtn" type="submit" class="btn-blue-bg" ng-click="morePoetrySearch('{{ path('IpoetryBundle_mainajax') }}')"">
+                                <span>{% trans %}%MoreFeeds%{% endtrans %}</span>
+                                </button>
+				<!-- Контент конец -->
+			</div>
+		</div>
+		<!-- Главный контейнер конец -->
+
+        <div style="clear:both;"></div>
+                      <ul class="unstyled">
+                          <li ng-repeat="searchedpoetry in searchedpoetries">
+                            <span>{% verbatim %} {{result.result}}{{searchedpoetry.psearchfeedlist}} {% endverbatim %}</span>
+                      </li>
+                      </ul>  
+<!--
+        <button id="getsearchresultblockbtn" type="submit" class="btn btn-primary start" ng-click="morePoetrySearch('{{ path('IpoetryBundle_mainajax') }}')">
+                            <i class="glyphicon glyphicon-upload"></i>
+                            <span>Get search result</span>
+        </button>-->
+<div id="paginator" data-pagination="" 
+  page="{% verbatim %}{{page}}{% endverbatim %}"></div>
+                            
+        <!--<input id="datapartnum" type="hidden" value="1"/>-->
+  </div>
+
+<!-- Подвал -->
+        {{ include('IpoetryBundle::basefooter.html.twig') }} 
+{% block javascripts %}
+{% javascripts '@IpoetryBundle/Resources/public/js/jquery-1.11.0.min.js'
+'@IpoetryBundle/Resources/public/bootstrap/dist/js/bootstrap.min.js'
+'@IpoetryBundle/Resources/public/bootstrap/dist/js/bootstrap.min.js'
+'@IpoetryBundle/Resources/public/js/angular.min.js'
+'@IpoetryBundle/Resources/public/js/angular-animate.min.js'
+'@IpoetryBundle/Resources/public/js/angular-route.min.js'
+'@IpoetryBundle/Resources/public/js/fancybox/jquery.fancybox.pack.js'
+'@IpoetryBundle/Resources/public/js/psearchapp.js'
+'@IpoetryBundle/Resources/public/js/w_load.js'
+'@IpoetryBundle/Resources/public/js/libs.js'
+'@IpoetryBundle/Resources/public/js/common.js'
+'@IpoetryBundle/Resources/public/js/angular-strap-2.3.6/dist/angular-strap.js'
+'@IpoetryBundle/Resources/public/js/angular-strap-2.3.6/dist/angular-strap.tpl.min.js'
+'@IpoetryBundle/Resources/public/js/moment-with-locales.min.js'
+'@IpoetryBundle/Resources/public/js/angular-strap-2.3.6/src/modal/modal.js'
+'@IpoetryBundle/Resources/public/bootstrap/docs/assets/js/ie-emulation-modes-warning.js'
+'@IpoetryBundle/Resources/public/bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js'
+%}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+{% endblock %}
+<script type="text/javascript">
+    
+    String.prototype.escapeHTML = function() {
+            return this.replace(/&/g, "&amp;")
+                       .replace(/</g, "&lt;")
+                       .replace(/>/g, "&gt;")
+                       .replace(/"/g, "&quot;")
+                       .replace(/'/g, "&#039;");
+    }
+    function stripslashes(str) {
+        str = str.replace(/\\'/g, '\'');
+        str = str.replace(/\\"/g, '"');
+        str = str.replace(/\\0/g, '\0');
+        str = str.replace(/\\\\/g, '\\');
+        return str;
+    }
+    
+    function GetAllNewsfeed(){
+        //делаем запрос о наличии у пользователя ленты со стихами/комментариями
+        //шлем AJAX
+        ajaxdata='main_json={"type":"get_all_newsfeed","user":"all","datapart":'+$('#datapartnum').val()+'}';
+        console.log(ajaxdata);
+        url='{{ path('IpoetryBundle_mainajax') }}';
+        type='post';
+        dataType='json';
+        onsuccess=function(json) {
+            console.log(json['result']);
+            console.log(json['newsfeed']);
+            if (json['result']>0) {
+                console.log($('#datapartnum').val());
+                $( '<p>'+json['newsfeed']+'</p>' ).insertBefore('#getuserfeedinfobtn');
+                console.log('AJAX_userFollowers_feed_available result='+json['result']);
+                $('#datapartnum').val((Number($('#datapartnum').val())+1));
+                //location.href='{{ path('IpoetryBundle_uroom') }}';
+            }
+        };
+        onerror=function(jqXHR, textStatus, errorThrown) {
+            console.log('error AJAX_userFollowers_feed_available ' + textStatus);
+        };
+        ajaxprototype(ajaxdata,url,type,dataType,onsuccess,onerror);
+
+    }
+    
+    $(document).ready(function () {
+        {% block documentReady %}
+            $('#getuserfeedinfobtn').on('click',function (event){
+                event = event || window.event;
+
+                  if (event.preventDefault) { // если метод существует
+                    event.preventDefault(); // то вызвать его
+                  } else { // иначе вариант IE8-:
+                    event.returnValue = false;
+                  }
+                  GetAllNewsfeed();
+            });
+
+            //checkOwnProfile();
+            //checkUserSubscribed();
+        $('#getsearchresultblockbtn').fadeOut();
+        {{ include('IpoetryBundle::basejs.html.twig') }}
+        {% endblock documentReady %}
+    });
+</script>
+
+</body>
+</html>

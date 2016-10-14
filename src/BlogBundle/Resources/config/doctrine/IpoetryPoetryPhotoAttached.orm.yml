@@ -1,0 +1,30 @@
+IpoetryBundle\Entity\IpoetryPoetryPhotoAttached:
+    type: entity
+    table: ipoetry_poetry_photo_attached
+    id:
+        ipoetryPoetryPhotoAttachedId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ipoetry_poetry_photo_attached_id
+            generator:
+                strategy: IDENTITY
+    fields:
+        ipoetryPoetryPhotoAttachedUrl:
+            type: string
+            nullable: true
+            length: 2083
+            options:
+                fixed: false
+                default: undefined
+            column: ipoetry_poetry_photo_attached_url
+        ipoetryPoetryPhotoAttached:
+            type: blob
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+            column: ipoetry_poetry_photo_attached
+    lifecycleCallbacks: {  }

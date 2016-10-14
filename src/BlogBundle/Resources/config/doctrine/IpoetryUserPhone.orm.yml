@@ -1,0 +1,23 @@
+IpoetryBundle\Entity\IpoetryUserPhone:
+    type: entity
+    table: ipoetry_user_phone
+    id:
+        ipoetryUserPhoneId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ipoetry_user_phone_id
+            generator:
+                strategy: IDENTITY
+    fields:
+        ipoetryUserPhone:
+            type: string
+            nullable: false
+            length: 11
+            options:
+                fixed: true
+                default: undefined
+            column: ipoetry_user_phone
+    lifecycleCallbacks: {  }

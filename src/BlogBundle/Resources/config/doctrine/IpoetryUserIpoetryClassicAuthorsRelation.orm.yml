@@ -1,0 +1,47 @@
+IpoetryBundle\Entity\IpoetryUserIpoetryClassicAuthorsRelation:
+    type: entity
+    table: ipoetry_user_ipoetry_classic_authors_relation
+    indexes:
+        fk_ipoetry_classic_authors_has_ipoetry_user_ipoetry_classic_idx:
+            columns:
+                - ipoetry_classic_authors_classic_authors_id
+        fk_ipoetry_classic_authors_has_ipoetry_user_ipoetry_user1_idx:
+            columns:
+                - ipoetry_user_user_id
+    id:
+        ipoetryUserIpoetryClassicAuthorsId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ipoetry_user_ipoetry_classic_authors_id
+        ipoetryUserUserParentId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ipoetry_user_user_parent_id
+    oneToOne:
+        ipoetryUserUser:
+            targetEntity: IpoetryUser
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ipoetry_user_user_id:
+                    referencedColumnName: user_id
+            orphanRemoval: false
+        ipoetryClassicAuthorsClassicAuthors:
+            targetEntity: IpoetryClassicAuthors
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ipoetry_classic_authors_classic_authors_id:
+                    referencedColumnName: classic_authors_id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

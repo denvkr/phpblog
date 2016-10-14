@@ -1,0 +1,40 @@
+IpoetryBundle\Entity\IpoetryTags:
+    type: entity
+    table: ipoetry_tags
+    id:
+        ipoetryTagsTagsId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ipoetry_tags_tags_id
+            generator:
+                strategy: AUTO
+    fields:
+        tagsText:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
+                default: undefined
+            column: tags_text
+        moderated:
+            type: integer
+            nullable: false
+            length: 1
+            options:
+                fixed: false
+                default: 0
+            column: moderated
+    manyToMany:
+        ipoetryPoetryPoetry:
+            targetEntity: IpoetryPoetry
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: ipoetryTagsTags
+            inversedBy: null
+            joinTable: null
+            orderBy: null
+    lifecycleCallbacks: {  }

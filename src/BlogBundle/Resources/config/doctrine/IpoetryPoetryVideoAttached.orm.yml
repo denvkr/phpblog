@@ -1,0 +1,30 @@
+IpoetryBundle\Entity\IpoetryPoetryVideoAttached:
+    type: entity
+    table: ipoetry_poetry_video_attached
+    id:
+        ipoetryPoetryVideoAttachedId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ipoetry_poetry_video_attached_id
+            generator:
+                strategy: IDENTITY
+    fields:
+        ipoetryPoetryVideoAttachedUrl:
+            type: string
+            nullable: true
+            length: 2083
+            options:
+                fixed: false
+                default: undefined
+            column: ipoetry_poetry_video_attached_url
+        ipoetryPoetryVideoAttached:
+            type: blob
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+            column: ipoetry_poetry_video_attached
+    lifecycleCallbacks: {  }

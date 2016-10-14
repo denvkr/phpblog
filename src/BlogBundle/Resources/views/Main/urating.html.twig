@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru" xml:lang="ru">
+<head>
+<title>ipoetry-Рейтинг пользователей</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="Keywords" content="" />
+<meta name="description" content="Рейтинг пользователей ipoetry" />
+<meta name="robots" content="index,follow" />
+    {% block stylesheets %}
+        {% stylesheets 'bundles/ipoetry/css/screen.css'
+        'bundles/ipoetry/css/style.css'
+        'bundles/ipoetry/bootstrap/docs/dist/css/bootstrap.min.css'
+        'bundles/ipoetry/bootstrap/docs/dist/css/bootstrap-theme.min.css'
+        'bundles/ipoetry/js/jQuery-File-Upload-9.12.3/css/jquery.fileupload.css'
+         filter='cssrewrite' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />     
+        {% endstylesheets %}        
+    {% endblock %}
+    
+</head>
+<body id="body_container" style="position: absolute; width:100%;height:100%;max-width:100%;max-height:100%;"> <!--//onload="javascript:Dimension();" width: 1160px; height: 800px;visibility:hidden;-->
+    <!--    <button id="setusersubscriptionbtn" type="submit" class="btn btn-primary start">
+                            <i class="glyphicon glyphicon-upload"></i>
+                            <span>Subscribe</span>
+        </button>
+    -->
+{% block body %}
+        {% for uratingitem in urating %}
+            <div class="user_id" dbid="{{uratingitem.userId}}" style="display:inline;">{{uratingitem.userId}}</div>
+            <div class="userrating" dbid="{{uratingitem.userId}}" style="display:inline;">{{uratingitem.userRating}}</div>
+            <div class="username" dbid="{{uratingitem.userId}}" style="display:inline;">{{uratingitem.userName}}</div>
+            <div class="userlastname" dbid="{{uratingitem.userId}}" style="display:inline;">{{uratingitem.userLastname}}</div>
+            <div class="usercity" dbid="{{uratingitem.userId}}" style="display:inline;">{{uratingitem.cityName}}</div>
+            <div class="userfollowers" dbid="{{uratingitem.userId}}" style="display:inline;">{{uratingitem.followers}}</div>
+            <img src="{{uratingitem.userPhotoUrl}}" width="50" heigth="50" />
+            <div style="clear:both;"></div>
+        {% endfor %}
+{% endblock %}
+
+        <div style="clear:both;"></div>
+
+        <button id="getuserratinginbtn" type="submit" class="btn btn-primary start">
+                            <i class="glyphicon glyphicon-upload"></i>
+                            <span>Get users ratings info</span>
+        </button>
+        <button id="getuserratinginweekbtn" type="submit" class="btn btn-primary start">
+                            <i class="glyphicon glyphicon-upload"></i>
+                            <span>Get users ratings WEEK</span>
+        </button>
+        <button id="getuserratinginmonthbtn" type="submit" class="btn btn-primary start">
+                            <i class="glyphicon glyphicon-upload"></i>
+                            <span>Get users ratings MONTH</span>
+        </button>
+        <button id="getuserratinginyearbtn" type="submit" class="btn btn-primary start">
+                            <i class="glyphicon glyphicon-upload"></i>
+                            <span>Get users ratings YEAR</span>
+        </button>
+
+        <input id="datapartnum" type="hidden" value="2"/>
+    
+{% block javascripts %}
+{% javascripts '@IpoetryBundle/Resources/public/js/jquery-1.11.0.min.js'
+'@IpoetryBundle/Resources/public/bootstrap/dist/js/bootstrap.min.js'
+'@IpoetryBundle/Resources/public/js/w_load.js'
+'@IpoetryBundle/Resources/public/bootstrap/docs/assets/js/ie-emulation-modes-warning.js'
+'@IpoetryBundle/Resources/public/bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js'
+%}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+{% endblock %}
+<script type="text/javascript">
+    
+    String.prototype.escapeHTML = function() {
+            return this.replace(/&/g, "&amp;")
+                       .replace(/</g, "&lt;")
+                       .replace(/>/g, "&gt;")
+                       .replace(/"/g, "&quot;")
+                       .replace(/'/g, "&#039;");
+    }
+    function stripslashes(str) {
+        str = str.replace(/\\'/g, '\'');
+        str = str.replace(/\\"/g, '"');
+        str = str.replace(/\\0/g, '\0');
+        str = str.replace(/\\\\/g, '\\');
+        return str;
+    }
+    
+    function GetUsersRatings(period){
+        //делаем запрос о наличии у пользователя ленты со стихами/комментариями
+        //шлем AJAX
+        ajaxdata=JSON.stringify({type:"get_usersratings",user:"all",period:"2016-06-16",datapart:$('#datapartnum').val()});
+        console.log(ajaxdata);
+        url='{{ path('IpoetryBundle_mainajax') }}';
+        type='post';
+        dataType='json';
+        onsuccess=function(json) {
+            console.log(json['result']);
+            console.log(json['usersratings']);
+            if (json['result']>0) {
+                console.log($('#datapartnum').val());
+                $( '<p>'+json['newsfeed']+'</p>' ).insertBefore('#getuserratinginbtn');
+                console.log('AJAX_usersratings_available result='+json['result']);
+                $('#datapartnum').val((Number($('#datapartnum').val())+1));
+                //location.href='{{ path('IpoetryBundle_uroom') }}';
+            }
+        };
+        onerror=function(jqXHR, textStatus, errorThrown) {
+            console.log('error AJAX_usersratings_available result ' + textStatus);
+        };
+        ajaxprototype(ajaxdata,url,type,dataType,onsuccess,onerror);
+
+    }
+    function GetUsersRatingswPeriod(urperiod){
+        //делаем запрос о наличии у пользователя ленты со стихами/комментариями
+        //шлем AJAX
+        ajaxdata=JSON.stringify({type:"get_usersratings",user:"all",period:urperiod,datapart:$('#datapartnum').val()});
+        console.log(ajaxdata);
+        url='{{ path('IpoetryBundle_mainratingsajax') }}';
+        type='post';
+        dataType='json';
+        onsuccess=function(json) {
+            console.log(json['result']);
+            console.log(json['usersratings']);
+            if (json['result']>0) {
+                console.log($('#datapartnum').val());
+                $( '<p>'+json['usersratings']+'</p>' ).insertBefore('#getuserratinginbtn');
+                console.log('AJAX_UsersRatingswPeriod_available result='+json['result']);
+                $('#datapartnum').val((Number($('#datapartnum').val())+1));
+                //location.href='{{ path('IpoetryBundle_uroom') }}';
+            }
+        };
+        onerror=function(jqXHR, textStatus, errorThrown) {
+            console.log('error AJAX_usersratings_available result ' + textStatus);
+        };
+        ajaxprototype(ajaxdata,url,type,dataType,onsuccess,onerror);
+
+    }
+    
+    $(document).ready(function () {
+        {% block documentReady %}
+            $('#getuserratinginfobtn').on('click',function (event){
+                event = event || window.event;
+
+                  if (event.preventDefault) { // если метод существует
+                    event.preventDefault(); // то вызвать его
+                  } else { // иначе вариант IE8-:
+                    event.returnValue = false;
+                  }
+                  //GetUsersRatings();
+            });
+            $('#getuserratinginweekbtn').on('click',function (event){
+                event = event || window.event;
+
+                  if (event.preventDefault) { // если метод существует
+                    event.preventDefault(); // то вызвать его
+                  } else { // иначе вариант IE8-:
+                    event.returnValue = false;
+                  }
+                  GetUsersRatingswPeriod('week');
+            });
+            $('#getuserratinginmonthbtn').on('click',function (event){
+                event = event || window.event;
+
+                  if (event.preventDefault) { // если метод существует
+                    event.preventDefault(); // то вызвать его
+                  } else { // иначе вариант IE8-:
+                    event.returnValue = false;
+                  }
+                  GetUsersRatingswPeriod('month');
+            });
+            $('#getuserratinginyearbtn').on('click',function (event){
+                event = event || window.event;
+
+                  if (event.preventDefault) { // если метод существует
+                    event.preventDefault(); // то вызвать его
+                  } else { // иначе вариант IE8-:
+                    event.returnValue = false;
+                  }
+                  GetUsersRatingswPeriod('year');
+            });
+
+            //checkOwnProfile();
+            //checkUserSubscribed();
+        {% endblock documentReady %}
+    });
+</script>
+
+</body>
+</html>
+

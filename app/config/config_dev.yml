@@ -1,0 +1,48 @@
+imports:
+    - { resource: config.yml }
+framework:
+    router:
+        resource: '%kernel.root_dir%/config/routing_dev.yml'
+        strict_requirements: true
+    profiler: { only_exceptions: false }
+
+web_profiler:
+    toolbar: true
+    #'%debug_toolbar%'
+    intercept_redirects: false
+    #'%debug_redirects%'
+
+doctrine:
+    dbal:
+        dbname:               phpblog
+        host:                 127.0.0.1
+        port:                 3306
+        user:                 phpblog
+        password:             udl
+        charset:              utf8mb4
+        memory:               true
+        # Configuring MultipleActiveResultSets for the pdo_sqlsrv driver
+        MultipleActiveResultSets:  ~
+        driver:               pdo_mysql
+        platform_service:     ~
+
+        # the version of your database engine
+        server_version:       5.5
+
+        # when true, queries are logged to a 'doctrine' monolog channel
+        logging:              '%kernel.debug%'
+        profiling:            '%kernel.debug%'
+        driver_class:         ~
+        wrapper_class:        ~
+    orm:
+        auto_mapping: true
+        # the standard distribution overrides this to be true in debug, false otherwise
+        auto_generate_proxy_classes: true
+        proxy_namespace: Proxies
+        proxy_dir: '%kernel.cache_dir%/doctrine/orm/Proxies'
+        default_entity_manager: default
+        metadata_cache_driver: array
+        query_cache_driver: array
+        result_cache_driver: array
+assetic:
+    use_controller: '%use_assetic_controller%'

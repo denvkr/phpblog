@@ -1,0 +1,12 @@
+{# empty Twig template #}
+<form class="bg-info" id="authority_user_form" class="form-signin" role="form" method="post" action="login">
+<h2 class="form-signin-heading">Авторизация</h2>
+<label for="inputEmail">Эл.почта</label>
+<input type="text" name="user" class="form-control form_elements_form-control" placeholder="Email address" required autofocus>
+    <label for="inputPassword">Пароль</label>
+<input type="password" name="password" class="form-control form_elements_form-control" placeholder="Password" required>
+<div class="checkbox">
+<label><input type="checkbox">Запомнить</label>
+</div>
+<button class="btn btn-lg btn-primary btn-block" name="_Sign_In" type="submit" form="authority_user_form" formmethod="post">Войти</button>
+</form>

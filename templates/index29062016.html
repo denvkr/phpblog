@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Разработка магазинов на основе систем phpshop,symfony (sylius).</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="Разработка магазинов на основе систем phpshop,symfony,symfony bundle sylius.Создание и продвижение landing лендинга и e-commerce решений с использованием CMS PHPShop и Symfony.">
+		<meta name="copyright" content="denvkr">
+    	<link id="app_theme" href="css/style.css" rel="stylesheet">
+		<script src='https://www.google.com/recaptcha/api.js?hl=ru'></script>
+	<!-- Подключаем библиотеку слайдеры и iframe -->
+	<!-- Fancybox -->
+    	<link rel="stylesheet" href="java/fancybox/jquery.fancybox.css">
+        <!-- /Fancybox -->
+        <!-- Bootstrap -->
+        <!--<link id="bootstrap_theme" href="java/bootstrap/docs/dist/css/bootstrap.min.css" rel="stylesheet">-->
+        <link id="bootstrap_theme" href="css/{{bootstrap_theme}}.css" rel="stylesheet">
+        <!-- Bootstrap theme -->
+        <!--<link href="java/bootstrap/docs/dist/css/bootstrap-theme.min.css" rel="stylesheet">-->
+        <!-- Custom styles for this template -->
+        <!--<link href="../../../bootstrap/theme.css" rel="stylesheet">-->
+	<!--/Bootstrap-->    
+	<!-- Подключаем всплывающие подсказки -->
+	<link rel="stylesheet" type="text/css" href="java/jquery-ui-1.11.2.custom/jquery-ui.min.css">
+	<link rel="stylesheet" type="text/css" href="java/jquery-ui-1.11.2.custom/jquery-ui.structure.min.css">
+	<link rel="stylesheet" type="text/css" href="java/jquery-ui-1.11.2.custom/jquery-ui.theme.min.css">
+    </head>
+<body id="body_container" onresize="javascript:dom_elm_sizing();">
+
+<div class="container-fluid" id="container_main">
+<div class="row">
+<div class="col-xs-14">
+<h1 class="bg-info">Разработка интернет-магазинов и дополнений phpshop,symfony(sylius).</h1>
+</div>
+</div>
+<div class="row">
+<div class=".col-xs-6 .col-sm-4">
+    <!--
+<div class="panel-body">
+                    <div class="center-block">
+                        <div class="bootstrap-theme" style="background:#CCC;" title="default" data-skin="bootstrap"></div>
+                        <div class="bootstrap-theme" style="background:#178ACC" title="cerulean" data-skin="bootstrap-theme-cerulean"></div><div class="bootstrap-theme" style="background:#000" title="cyborg" data-skin="bootstrap-theme-cyborg"></div><div class="bootstrap-theme" style="background:#D9230F" title="flatly" data-skin="bootstrap-theme-flatly"></div><div class="bootstrap-theme" style="background:#FFCAEA" title="loving" data-skin="bootstrap-theme-loving"></div><div class="bootstrap-theme" style="background:#45B3AF" title="sardbirds" data-skin="bootstrap-theme-sardbirds"></div><div class="bootstrap-theme" style="background:#DF691A" title="simplex" data-skin="bootstrap-theme-simplex"></div><div class="bootstrap-theme" style="background:#4E5D6C" title="slate" data-skin="bootstrap-theme-slate"></div><div class="bootstrap-theme" style="background:#46709D" title="spacelab" data-skin="bootstrap-theme-spacelab"></div><div class="bootstrap-theme" style="background:#564267" title="wildspot" data-skin="bootstrap-theme-wildspot"></div><div class="bootstrap-theme" style="background:#468966" title="wordless" data-skin="bootstrap-theme-wordless"></div><div class="bootstrap-theme" style="background:#008CBA" title="yeti" data-skin="bootstrap-theme-yeti"></div>
+                            </div>
+                            <div class="clearfix"><br></div>
+    <a href="?skin=bootstrap_fluid" class="btn btn-default active btn-sm" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Резиновый размер"><span class="glyphicon glyphicon-fullscreen"></span> Fluid</a> <a href="?skin=bootstrap" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Фиксированный размер"><span class="glyphicon glyphicon-retweet"></span> Fixed</a>
+                    <div class="clearfix"></div>
+</div>
+    -->
+</div>    
+<div class=".col-xs-6 .col-sm-4">
+    <div class="center-block">
+<form class="base_form" action="#" method="POST">
+<div id="html_element"></div>
+  <div class="form-group">
+    <label for="exampleInputEmail1">Эл. почта</label>
+    <input type="email" class="form-control" name="exampleInputEmail1" id="exampleInputEmail1" placeholder="s.ivanov@mgsystem.com">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputTel1">Телефон</label>
+    <input type="tel" class="form-control" name="exampleInputPhone1" id="exampleInputPhone1" placeholder="+7(132)123-23-23">
+  </div>
+  <div class="form-group">
+    <p class="help-block">Запрос в кратком виде.</p>
+    <textarea class="form-control" name="userRequestText" rows="3"></textarea>    
+  </div>
+  <div class="g-recaptcha" data-sitekey="6LdewCETAAAAAFLpPrNSheOXjMJktftwVL9MNDtv"></div>
+            <input type="button" class="btn btn-primary" onclick="InputCheck();" value="Отправить запрос">
+</form>
+
+</div>        
+</div>
+    <div class="clearfix visible-xs-block"></div>
+<div class=".col-xs-6 .col-sm-4">
+
+</div>    
+</div>
+    
+</div>
+    <div>{{num_cnt_attempt}}</div>
+    <!--Подключаем JQUERY -->
+    <script type="text/javascript" src="java/jquery-1.11.0.min.js"></script>
+    <!-- Fancybox -->
+    <script type="text/javascript" src="java/fancybox/jquery.fancybox.pack.js"></script>
+    <!-- Bootstrap -->
+    <script type="text/javascript" src="java/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- Just for debugging purposes. Don\'t actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="java/bootstrap/docs/assets/js/ie-emulation-modes-warning.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="java/bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js"></script>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>-->
+    <script type="text/javascript" src="java/jquery-ui-1.11.2.custom/jquery-ui.min.js"></script>
+    <!-- Подключаем inputmask -->
+    <script type="text/javascript" src="java/jquery.inputmask-3.x/js/inputmask.js"></script>
+    <script type="text/javascript" src="java/jquery.inputmask-3.x/js/inputmask.date.extensions.js"></script>
+    <script type="text/javascript" src="java/jquery.inputmask-3.x/js/inputmask.phone.extensions.js"></script>
+    <script type="text/javascript" src="java/jquery.inputmask-3.x/js/inputmask.extensions.js"></script>       
+    <script type="text/javascript" src="java/jquery.inputmask-3.x/js/jquery.inputmask.js"></script>
+
+    <script type="text/javascript" src="java/jquery.cookie.js"></script>
+        
+    <!-- Подключаем browser detecting -->
+    <script type="text/javascript" src="java/jquery-browser-plugin-master/dist/jquery.browser.min.js"></script>	
+    <!-- Подключаем изменения элементов экрана -->
+    <script type="text/javascript" src="java/window_resize.js"></script>	
+    <script type="text/javascript" src="java/basic_jquery_support.js"></script>        
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+IpoetryBundle\Entity\IpoetryPoetryUserRepostView:
+    type: entity
+    table: ipoetry_poetryuserrepost
+    #indexes:
+    #    fk_ipoetry_user_followed_by_ipoetry_user1_idx:
+    #        columns:
+    #            - ipoetry_user_user_id
+    id:
+        poetryRepostId:
+            type: string
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: poetryrepost_id
+        poetryId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: poetry_id
+    fields:
+        userId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            column: user_id
+        createdAt:
+            type: datetime
+            nullable: false
+            options:
+                unsigned: false
+            column: createdat
+        userPoetryownerId:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: user_poetryowner_id           
+    lifecycleCallbacks: {  }

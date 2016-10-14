@@ -1,0 +1,47 @@
+IpoetryBundle\Entity\IpoetryUserIpoetryPoetryTypesRelation:
+    type: entity
+    table: ipoetry_user_ipoetry_poetry_types_relation
+    indexes:
+        fk_ipoetry_user_has_ipoetry_poetry_types_ipoetry_poetry_typ_idx:
+            columns:
+                - ipoetry_poetry_types_ipoetry_poetry_types_id
+        fk_ipoetry_user_has_ipoetry_poetry_types_ipoetry_user1_idx:
+            columns:
+                - ipoetry_user_user_id
+    id:
+        ipoetryUserIpoetryPoetryTypesRelationId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ipoetry_user_ipoetry_poetry_types_relation_id
+        ipoetryUserUserParentId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ipoetry_user_user_parent_id
+    oneToOne:
+        ipoetryUserUser:
+            targetEntity: IpoetryUser
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ipoetry_user_user_id:
+                    referencedColumnName: user_id
+            orphanRemoval: false
+        ipoetryPoetryTypesIpoetryPoetryTypes:
+            targetEntity: IpoetryPoetryTypes
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ipoetry_poetry_types_ipoetry_poetry_types_id:
+                    referencedColumnName: ipoetry_poetry_types_id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

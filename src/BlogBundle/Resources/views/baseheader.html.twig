@@ -1,0 +1,42 @@
+	<div class="top-panel">
+		<div class="container clearfix">
+			<a href="/" class="logo">
+                        {% image '@IpoetryBundle/Resources/public/images/logo.png' %}
+                        <img src="{{ asset_url }}" alt="Logo" />
+                        {% endimage %}
+			</a>
+			<nav>
+				<ul class="clearfix">
+					<li><a href="#">Сообщества</a></li>
+					<li><a href="{{path('IpoetryBundle_subscribers',{user:userheaderInfo.userId,utype:'a'})}}">Участники</a></li>
+					<li><a href="#">Рейтинги</a></li>
+					<li><a href="#">Классика</a></li>
+					<li><a href="{{path('IpoetryBundle_unewsfeedentityrnd',{user:userheaderInfo.userId,poetry:'rnd'})}}">Читать стихи</a></li>
+				</ul>
+			</nav>
+			<div class="topline-user-wrap" dbid="{{userheaderInfo.userId}}">
+				<a href="{{ path('IpoetryBundle_unewsfeed',{'user':userheaderInfo.userId}) }}" class="clearfix">
+					<div class="topline-user-img-wrap" dbid="{{userheaderInfo.userId}}">
+						<img id="usersmallphoto" src="{{userheaderInfo.userPhotoUrl}}" alt="" />
+					</div>
+					<div class="topline-user-name">{{userheaderInfo.userName}} <span>{{userheaderInfo.userLastname}}</span></div>
+				</a>
+			</div>
+			<div class="topline-points-wrap">
+				<a href="#" class="topline-points"><span>40</span> баллов</a>
+			</div>
+			<div class="topline-question-wrap">
+				<a href="#" class="topline-question"></a>
+				<div class="topline-question-popup-wrap">
+					<div class="topline-question-popup">Баллы — это внутренняя валюта нашего проекта. Вы получаете по 1 баллу за просмотр чужих стихов и можете потратить их на получение дополнительных прочтений своих произведений. <br>Для того, чтобы получить дополнительные показы, нажмите <span>"Продвинуть"</span> на странице своего стиха.</div>
+				</div>
+			</div>
+			<div class="topline-search-wrap">
+				<a href="{{ path('IpoetryBundle_psearch') }}" class="topline-search"></a>
+			</div>
+			<div class="topline-close-wrap">
+				<a href="#" id="closehref" class="topline-points" style="display: inline-block;position: relative;margin-top: 8px;margin-right: 260px;width: 60px;">Выход</a>
+			</div>
+
+		</div>
+	</div>

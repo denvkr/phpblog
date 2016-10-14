@@ -1,0 +1,22 @@
+IpoetryBundle\Entity\IpoetryUserAge:
+    type: entity
+    table: ipoetry_user_age
+    id:
+        ipoetryUserAgeId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ipoetry_user_age_id
+            generator:
+                strategy: IDENTITY
+    fields:
+        ipoetryUserAge:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+                default: 0
+            column: ipoetry_user_age
+    lifecycleCallbacks: {  }

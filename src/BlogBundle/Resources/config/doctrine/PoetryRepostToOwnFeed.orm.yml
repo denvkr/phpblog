@@ -1,0 +1,42 @@
+IpoetryBundle\Entity\PoetryRepostToOwnFeed:
+    type: entity
+    table: poetryrepost
+    repositoryClass: IpoetryBundle\Entity\Repository\PoetryRepostToOwnFeedRepository
+    id:
+        poetryRepostId:
+            type: string
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: poetryrepost_id
+            strategy: IDENTITY
+    fields:
+        userId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            column: user_id
+        poetryId:
+            type: integer
+            nullable: false
+            options:
+                fixed: false
+                default: 0
+            column: poetry_Id
+        repostedAt:
+            type: datetime
+            nullable: false
+            default: 'undefined'
+            options:
+                fixed: false
+            column: repostedat
+        userPoetryOwnerId:
+            type: integer
+            nullable: false
+            options:
+                fixed: false
+                default: 0
+            column: user_poetryowner_id
+    lifecycleCallbacks: {  }
