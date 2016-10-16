@@ -59,6 +59,7 @@ try {
 } catch (Exception $e) {
     $response = new Response('An error occurred '.$e, 500);
 }
+$response->prepare($request);
 $response->send();
 
 function render_template(Request $request) {

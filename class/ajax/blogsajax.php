@@ -23,24 +23,65 @@ $blogloader=new blogloader();
 
 $memcache = new \Memcache;
 $memcache->connect('127.0.0.1', 11211) or exit("Невозможно подключиться к серверу Memcached");
-if ($memcache->get($parameters['user'])!==false) {
-    $userinfo=$memcache->get($parameters['user']);
-    if (intval($userinfo[2])===1){
-       $result=array('hasuser'=>1);
+if (isset($parameters['type'])){
+    //отрабатываем логин пользователя
+    if ($parameters['type']=="user_authentication"){
+        if ($memcache->get($parameters['user'])!==false) {
+            $userinfo=$memcache->get($parameters['user']);
+            if (intval($userinfo[2])===1){
+               $result=array('hasuser'=>1);
+                if ($request->hasSession()) {
+                    //пишем обновленные данные в базу
+                    if (!$request->getSession()->has('login') && !$request->getSession()->has('login_id')){
+                        $request->getSession()->set('login',$userinfo[0]);
+                        $request->getSession()->set('login_id',$userinfo[1]);
+                    }
+                }        
+            } else
+              $result=array('hasuser'=>0);
+        } else {
+            $result=$blogloader->doctrine_get_user($parameters['user'],$parameters['password']);
+            $memcache->set($parameters['user'], array($parameters['user'],$result[0]['id'],$result[0]['hasuser']), false, 0);
+        }
+        //VarDumper::dump(array($memcache->get($parameters['user'],$request->getSession())));
+        // Формируем результат
+        echo json_encode($result);//json_encode($request->attributes->all());
+
+    }
+    //отрабатываем выход пользователя
+    if ($parameters['type']=="user_dislogged"){
+
+        if ($request->hasSession()) {
+            $request->getSession()->invalidate();
+            $result=array('dislogged'=>1);                    
+        } else {
+            $result=array('dislogged'=>0);                    
+        }
+
+        //VarDumper::dump(array($memcache->get($parameters['user'],$request->getSession())));
+        // Формируем результат
+        echo json_encode($result);//json_encode($request->attributes->all());
+
+    }
+
+    //отрабатываем добавление блога
+    if ($parameters['type']=="addblog") {
         if ($request->hasSession()) {
             //пишем обновленные данные в базу
-            if (!$request->getSession()->has('login') && !$request->getSession()->has('login_id')){
-                $request->getSession()->set('login',$userinfo[0]);
-                $request->getSession()->set('login_id',$userinfo[1]);
+            if ($request->getSession()->has('login') && $request->getSession()->has('login_id')){
+                $result=$blogloader->doctrine_add_post($parameters['blogparentid'],$request->getSession()->has('login'),
+                                                       $request->getSession()->has('login_id'),
+                                                       $parameters['blogtext']);
+                $result=array('blogwasadded'=>$result); 
+            } else {
+                $result=array('blogwasadded'=>0);
             }
-        }        
-    } else
-      $result=array('hasuser'=>0);
-} else {
-    $result=$blogloader->doctrine_get_user($parameters['user'],$parameters['password']);
-    $memcache->set($parameters['user'], array($parameters['user'],$result[0]['id'],$result[0]['hasuser']), false, 0);
+        } else {
+            $result=array('blogwasadded'=>0);
+        }
+        //VarDumper::dump(array($memcache->get($parameters['user'],$request->getSession())));
+        // Формируем результат
+        echo json_encode($result);//json_encode($request->attributes->all());
+    }
 }
-//VarDumper::dump(array($memcache->get($parameters['user'],$request->getSession())));
-// Формируем результат
-echo json_encode($result);//json_encode($request->attributes->all());
 ?>

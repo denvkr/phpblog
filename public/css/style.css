@@ -2,3 +2,9 @@
     font-size: 19px;
     font-weight: bold;
 }
+.unhidden{
+    display:block!important;
+}
+div[id^="addblogitemblock"]{
+    display:none;
+}

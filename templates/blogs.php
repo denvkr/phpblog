@@ -10,7 +10,7 @@ use Symfony\Component\VarDumper\VarDumper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use \Symfony\Component\DependencyInjection\Container;
-$request = Request::createFromGlobals();
+//$request = Request::create('http://phpblog/');
 
 $PathiniFile = filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/config/config.ini';
 
@@ -46,20 +46,28 @@ $template = $twig->loadTemplate('index.twig');
 //knpmenu сайта
 $menubuilder=new menubuilder();
 
-//$whoAreYou=$blogloader->doctrine_get_user('user');
+//выясняем не залогинен ли уже участнки
 if ($request->hasSession())
-    if ($request->getSession()->has('login') && $request->getSession()->has('login_id'))
+    if ($request->getSession()->has('login') && $request->getSession()->has('login_id')){
        $userinfo='Вы '.$request->getSession()->get('login');
-    else
+       $authenticationbtnval='Выйти';
+       $askmemcache=$GLOBALS['memcache']->get($request->getSession()->get('login'));
+    } else {
         $userinfo='';
-       
+        $authenticationbtnval='Войти';
+        $askmemcache='';
+    }
+//получаем блоги
+$blogs=$blogloader->doctrine_get_AllBlogs();
+    
 if ($GLOBALS['SysValue']['debug']['debug'])
     VarDumper::dump(array('menu'=>$menu,'TwigRenderer'=>$TwigRenderer,
                           'TwigRendererhtml'=>$TwigRendererhtml,
                           'menubuilder'=>$menubuilder,
                           'Container'=>$Container,
                           'whoAreYou'=>$whoAreYou,
-                          'memcache'=>$GLOBALS['memcache']->get('user')
+                          'memcache'=>$askmemcache,
+                          'session'=>$request->hasSession()
                          ));
 
 echo $template->render(array('knpmenu'=>$menubuilder->mainMenu($twig,array()),
@@ -68,7 +76,9 @@ echo $template->render(array('knpmenu'=>$menubuilder->mainMenu($twig,array()),
                              'visitor_count'=>$visitorCount,
                              'host'=>$request->getClientIp(),
                              'ajaxroutine'=>'/class/ajax/blogsajax.php',
-                             'userinfo'=>$userinfo));
+                             'userinfo'=>$userinfo,
+                             'blogs'=>$blogs,
+                             'authenticationbtnval'=>$authenticationbtnval));
 } else
     echo $GLOBALS['iniFileError'];    
 

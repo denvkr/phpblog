@@ -25,7 +25,10 @@ class blogloader {
     use parseini;
     //класс работы с базой данных
     private $dbroutine;
-    
+    //работа с doctrine
+    private $doctrnconfig;
+    private $connectionParams;
+    private $doctrnconn;
     public function __construct(){
         //глобально открываем содержимое конфиг файла
         self::parseini();
@@ -33,6 +36,10 @@ class blogloader {
         $this->dbroutine=new dbroutine();
         //активируем соединение с БД
         $this->dbroutine->dbconnect();
+        $this->doctrnconfig = new \Doctrine\DBAL\Configuration();
+        $this->doctrnconfig->setAutoCommit(true);
+        $this->connectionParams=$this->dbroutine->getConnectionParams();
+        $this->doctrnconn = DriverManager::getConnection($this->connectionParams, $this->doctrnconfig);
     }
     
     public function getSessionInfo(){
@@ -55,13 +62,10 @@ class blogloader {
    public function get_total_sessions_amount(){
        return $this->dbroutine->get_total_sessions_amount();
    }
+   //получаем пользователя из БД
    public function doctrine_get_user($user=null,$pwd=null) {
        if (!is_null($user) && !is_null($pwd)){
-            $config = new \Doctrine\DBAL\Configuration();
-            $config->setAutoCommit(true);
-            $connectionParams=$this->dbroutine->getConnectionParams();
-            $conn = DriverManager::getConnection($connectionParams, $config);
-             $qb = $conn->createQueryBuilder()
+             $qb = $this->doctrnconn->createQueryBuilder()
              ->select('count(u.id) hasuser,u.id id')
              ->from('fos_user', 'u')
                      ->where('u.u=:usr AND u.p=:pwd');
@@ -69,10 +73,32 @@ class blogloader {
              $qb->setParameter('pwd', $pwd);
              $results = $qb->execute();
              if ($GLOBALS['SysValue']['debug']['debug'])
-                 VarDumper::dump(array('conn'=>$conn,'qb'=>$qb,'results'=>$results));
+                 VarDumper::dump(array('conn'=>$this->doctrnconn,'qb'=>$qb,'results'=>$results));
              return $results->fetchAll();
        } else {
            return 0;           
        }
+   }
+   
+   public function doctrine_get_AllBlogs(){
+             $qb = $this->doctrnconn->createQueryBuilder()
+             ->select('b.id blogid,b.parentid blogparentid,b.userid,u.u bloguser,b.create,b.text blogtext')
+             ->from('blogs', 'b')
+             ->leftJoin('b','fos_user', 'u','u.id=b.userid');
+             $results = $qb->execute();
+             if ($GLOBALS['SysValue']['debug']['debug'])
+                 VarDumper::dump(array('conn'=>$this->doctrnconn,'qb'=>$qb,'results'=>$results));
+             return $results->fetchAll();
+   }
+   
+   public function doctrine_add_post($blogparentid,$login,$login_id,$blogtext) {
+             $createAt=new \DateTime();
+             $qb = $this->doctrnconn->createQueryBuilder()
+                     ->insert('blogs')->values(array('`parentid`'=>$blogparentid,'`userid`'=>$login_id,'`text`'=>"'".$blogtext."'",'`create`'=>"'".$createAt->format('Y-m-d H:i:s')."'"));
+             $results = $qb->execute();
+             if ($GLOBALS['SysValue']['debug']['debug'])
+                 VarDumper::dump(array('conn'=>$this->doctrnconn,'qb'=>$qb,'results'=>$results));
+             return $results->errorCode();
+       
    }
 }

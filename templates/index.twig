@@ -71,21 +71,29 @@
     <div class="emptyblock"></div>
 <div class="row" style="margin-bottom: 1px;">
     <div class=".col-xs-6 .col-sm-4">
+        {% if blogs %}
             {% for blogitem in blogs %}
-            <div id="blogitemblock{{blogitem.blogId}}" blogid="{{blogitem.blogId}}" blogparentid="{{blogitem.blogParentId}}">
+            <div id="blogitemblock{{blogitem.blogid}}" blogid="{{blogitem.blogid}}" blogparentid="{{blogitem.blogparentid}}">
                 <img src="{{blogitem.userPhotoUrl}}" width="50" height="50"/>
-                <div name="bloguserinfo">{{blogitem.userName}}</div>
-                <div name="blogtext">{{blogitem.blogText}}</div>
-                <div>создан {{blogitem.CreatedAt|date('Y-m-d H:i:s')}}</div>
-                <button type="button" blogparentid="{{blogitem.blogParentId}}" blogid="{{blogitem.blogId}}" name="AddBlogbtn" class="btn btn-sm btn-primary" style="display:inline;">Комментировать</button>
+                <div name="bloguserinfo">{{blogitem.bloguser}}</div>
+                <div name="blogtext">{{blogitem.blogtext}}</div>
+                <div>создан {{blogitem.create|date('Y-m-d H:i:s')}}</div>
+                <button type="button" blogid="{{blogitem.blogid}}" blogparentid="{{blogitem.blogparentid}}" name="opencommentblogbtn" class="btn btn-sm btn-primary" style="display:inline;">Комментировать</button>
                 <div style="clear:both"></div>
-                <div id="addblogitemblock{{blogitem.blogId}}" blogid="{{blogitem.blogId}}" blogparentid="{{blogitem.blogParentId}}" style="display:block;">
-                    <textarea id="blogtext" cols="70" rows="5" style="display:block;"></textarea>
-                    <button type="button" id="addblogbtn" class="btn btn-sm btn-primary" style="display:inline;">Отправить</button>
+                <div id="addblogitemblock{{blogitem.blogid}}" blogid="{{blogitem.blogid}}" blogparentid="{{blogitem.blogparentid}}">
+                    <textarea name="blogtext" cols="70" rows="5" style="display:block;"></textarea>
+                    <button type="button" name="addblogbtn" blogid="{{blogitem.blogId}}" blogparentid="{{blogitem.blogparentid}}" class="btn btn-sm btn-primary" style="display:inline;">Отправить</button>
                 </div>
             </div>
             {% endfor %}
+        {% else %}
+            <div class="warninginfo">Пока нет ни одного блога.</div>
+                <div id="addblogitemblock0" blogid="0" blogparentid="0" style="display:block;">
+                    <textarea name="blogtext" cols="70" rows="5" style="display:block;"></textarea>
+                    <button type="button" name="addblogbtn" blogid="0" blogparentid="0" class="btn btn-sm btn-primary" style="display:inline;">Отправить</button>
+                </div>
 
+        {% endif %}
             <input id="datapartnum" type="hidden" value="1"/>
 
     </div>        
