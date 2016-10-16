@@ -34,8 +34,8 @@
 <div class=".col-xs-14">
 
 {% include 'regmenubase.html.twig' %}
-<h1 class="bg-info">Читаем блоги</h1>
-
+<h1 class="bg-info">Читаем|комментируем мысли</h1>
+<!--
 <ul class="nav nav-pills" role="tablist">
 <li role="presentation" class="dropdown"> 
     <a href="#" class="dropdown-toggle" id="drop1" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Блог 
@@ -57,7 +57,7 @@
 </li>
 </li>
 </ul>    
-
+-->
 </div>
 </div>
 <div class="row">
@@ -71,6 +71,23 @@
     <div class="emptyblock"></div>
 <div class="row" style="margin-bottom: 1px;">
     <div class=".col-xs-6 .col-sm-4">
+            {% for blogitem in blogs %}
+            <div id="blogitemblock{{blogitem.blogId}}" blogid="{{blogitem.blogId}}" blogparentid="{{blogitem.blogParentId}}">
+                <img src="{{blogitem.userPhotoUrl}}" width="50" height="50"/>
+                <div name="bloguserinfo">{{blogitem.userName}}</div>
+                <div name="blogtext">{{blogitem.blogText}}</div>
+                <div>создан {{blogitem.CreatedAt|date('Y-m-d H:i:s')}}</div>
+                <button type="button" blogparentid="{{blogitem.blogParentId}}" blogid="{{blogitem.blogId}}" name="AddBlogbtn" class="btn btn-sm btn-primary" style="display:inline;">Комментировать</button>
+                <div style="clear:both"></div>
+                <div id="addblogitemblock{{blogitem.blogId}}" blogid="{{blogitem.blogId}}" blogparentid="{{blogitem.blogParentId}}" style="display:block;">
+                    <textarea id="blogtext" cols="70" rows="5" style="display:block;"></textarea>
+                    <button type="button" id="addblogbtn" class="btn btn-sm btn-primary" style="display:inline;">Отправить</button>
+                </div>
+            </div>
+            {% endfor %}
+
+            <input id="datapartnum" type="hidden" value="1"/>
+
     </div>        
 </div>   
 
@@ -113,6 +130,8 @@
     <!-- Подключаем изменения элементов экрана -->
     <script type="text/javascript" src="public/js/window_resize.js"></script>	
     <script type="text/javascript" src="public/js/basic_jquery_support.js"></script>        
-
+    <script type="text/javascript">
+    {% include 'jsbase.html.twig' %}
+    </script>
 </body>
 </html>

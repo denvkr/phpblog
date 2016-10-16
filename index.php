@@ -24,8 +24,20 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\VarDumper\VarDumper;
 use Symfony\Component\Console\Application;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 $request = Request::createFromGlobals();
+if (!$request->hasSession()) {
+    $request->setSession(new Session);
+    $request->getSession()->start();
+}
+if (!class_exists("Memcache"))  exit("Memcached не установлен");
+$GLOBALS['memcache'] = new \Memcache;
+$GLOBALS['memcache']->connect('127.0.0.1', 11211) or exit("Невозможно подключиться к серверу Memcached");
+ 
+$version = $GLOBALS['memcache']->getVersion();
+
+VarDumper::dump(array($version));
 
 require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/class/blogloader.php';
 //require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/class/routes.php';

@@ -1,0 +1,46 @@
+<?php
+//подключаем необходимые библиотеки
+require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/vendor/autoload.php';
+//вариант работы через кастомизированную логику 
+//с использованием компонентов symfony инициализации конец
+
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\VarDumper\VarDumper;
+use Symfony\Component\HttpFoundation\Session\Session;
+
+$request = Request::createFromGlobals();
+if (!$request->hasSession()) {
+    $request->setSession(new Session);
+    $request->getSession()->start();
+}
+
+$parameters=@json_decode($request->getContent(),true);
+require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/class/blogloader.php';
+use phpBlog\blogloader;
+//var_dump(array($parameters));
+$blogloader=new blogloader();
+
+$memcache = new \Memcache;
+$memcache->connect('127.0.0.1', 11211) or exit("Невозможно подключиться к серверу Memcached");
+if ($memcache->get($parameters['user'])!==false) {
+    $userinfo=$memcache->get($parameters['user']);
+    if (intval($userinfo[2])===1){
+       $result=array('hasuser'=>1);
+        if ($request->hasSession()) {
+            //пишем обновленные данные в базу
+            if (!$request->getSession()->has('login') && !$request->getSession()->has('login_id')){
+                $request->getSession()->set('login',$userinfo[0]);
+                $request->getSession()->set('login_id',$userinfo[1]);
+            }
+        }        
+    } else
+      $result=array('hasuser'=>0);
+} else {
+    $result=$blogloader->doctrine_get_user($parameters['user'],$parameters['password']);
+    $memcache->set($parameters['user'], array($parameters['user'],$result[0]['id'],$result[0]['hasuser']), false, 0);
+}
+//VarDumper::dump(array($memcache->get($parameters['user'],$request->getSession())));
+// Формируем результат
+echo json_encode($result);//json_encode($request->attributes->all());
+?>

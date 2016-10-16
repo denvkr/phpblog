@@ -1,0 +1,25 @@
+{% block baseDocumentReady %} 
+    //аутентификация
+    $('#authenticationbtn').click(function(){
+                var oReq = new XMLHttpRequest();
+                oReq.onreadystatechange = function() {
+                    //console.log(JSON.parse(oReq.responseText));
+                    if (oReq.readyState === 4 && oReq.status === 200) {
+                        response=JSON.parse(oReq.response);
+                        console.log(response.hasuser);
+                        if (Number(response.hasuser)===1){
+                            console.log('user logged');
+                            //показываем пользователя
+                            $('#userinfo').text('Вы '+$('input[name="_username"]').eq(0).val());
+                            return 1;
+                        } else
+                            console.log('wrong user');
+                            return 0;
+                    }
+                };
+    
+        oReq.open("POST", "{{ajaxroutine}}",true);
+        oReq.setRequestHeader("Content-Type", "application/json");
+        oReq.send(JSON.stringify({type:"user_authentication",user:$('input[name="_username"]').eq(0).val(),password:$('input[name="_password"]').eq(0).val()}));
+    });
+{% endblock baseDocumentReady %}

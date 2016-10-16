@@ -55,19 +55,24 @@ class blogloader {
    public function get_total_sessions_amount(){
        return $this->dbroutine->get_total_sessions_amount();
    }
-   public function doctrine_get_user($user) {
-       $config = new \Doctrine\DBAL\Configuration();
-       $config->setAutoCommit(true);
-       $connectionParams=$this->dbroutine->getConnectionParams();
-       $conn = DriverManager::getConnection($connectionParams, $config);
-        $qb = $conn->createQueryBuilder()
-        ->select('u.id')
-        ->addSelect('u.u')
-        ->addSelect('u.p')
-        ->from('fos_user', 'u');
-        $results = $qb->execute();
-        if ($GLOBALS['SysValue']['debug']['debug'])
-            VarDumper::dump(array('conn'=>$conn,'qb'=>$qb,'results'=>$results));
-        return $results->fetchAll();
+   public function doctrine_get_user($user=null,$pwd=null) {
+       if (!is_null($user) && !is_null($pwd)){
+            $config = new \Doctrine\DBAL\Configuration();
+            $config->setAutoCommit(true);
+            $connectionParams=$this->dbroutine->getConnectionParams();
+            $conn = DriverManager::getConnection($connectionParams, $config);
+             $qb = $conn->createQueryBuilder()
+             ->select('count(u.id) hasuser,u.id id')
+             ->from('fos_user', 'u')
+                     ->where('u.u=:usr AND u.p=:pwd');
+             $qb->setParameter('usr', $user);
+             $qb->setParameter('pwd', $pwd);
+             $results = $qb->execute();
+             if ($GLOBALS['SysValue']['debug']['debug'])
+                 VarDumper::dump(array('conn'=>$conn,'qb'=>$qb,'results'=>$results));
+             return $results->fetchAll();
+       } else {
+           return 0;           
+       }
    }
 }

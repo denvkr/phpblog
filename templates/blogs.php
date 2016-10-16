@@ -1,5 +1,6 @@
 <?php
 require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/class/menubuilder.php';
+use phpBlog\ajaxroutine;
 use phpBlog\menubuilder;
 use phpBlog\blogloader as blogloader;
 use Symfony\Component\HttpKernel\Kernel;
@@ -42,19 +43,32 @@ if ($GLOBALS['SysValue']['debug']['debug'])
 $twig->clearTemplateCache();
 $template = $twig->loadTemplate('index.twig');
 
-//knpmenu
+//knpmenu сайта
 $menubuilder=new menubuilder();
 
-$whoAreYou=$blogloader->doctrine_get_user('user');
+//$whoAreYou=$blogloader->doctrine_get_user('user');
+if ($request->hasSession())
+    if ($request->getSession()->has('login') && $request->getSession()->has('login_id'))
+       $userinfo='Вы '.$request->getSession()->get('login');
+    else
+        $userinfo='';
+       
 if ($GLOBALS['SysValue']['debug']['debug'])
-    VarDumper::dump(array('menu'=>$menu,'TwigRenderer'=>$TwigRenderer,'TwigRendererhtml'=>$TwigRendererhtml,'menubuilder'=>$menubuilder,'Container'=>$Container,'whoAreYou'=>$whoAreYou));
+    VarDumper::dump(array('menu'=>$menu,'TwigRenderer'=>$TwigRenderer,
+                          'TwigRendererhtml'=>$TwigRendererhtml,
+                          'menubuilder'=>$menubuilder,
+                          'Container'=>$Container,
+                          'whoAreYou'=>$whoAreYou,
+                          'memcache'=>$GLOBALS['memcache']->get('user')
+                         ));
 
 echo $template->render(array('knpmenu'=>$menubuilder->mainMenu($twig,array()),
                              'num_cnt_attempt'=>$attempts,
                              'bootstrap_theme'=>'bootstrap-theme-slate',
                              'visitor_count'=>$visitorCount,
-                             'host'=>$request->getClientIp()));
- 
+                             'host'=>$request->getClientIp(),
+                             'ajaxroutine'=>'/class/ajax/blogsajax.php',
+                             'userinfo'=>$userinfo));
 } else
     echo $GLOBALS['iniFileError'];    
 
