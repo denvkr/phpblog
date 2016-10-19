@@ -31,7 +31,7 @@ $twig = new Twig_Environment($loader, array(
 $blogloader=new blogloader();
 
 //получаем кол-во попыток логина
-$attempts=$blogloader->getSessionInfo();
+$attempts='';//$blogloader->getSessionInfo();
 
 //кол-во посещений страниц пользователями
 $visitorCount=$blogloader->get_total_sessions_amount();
@@ -52,14 +52,17 @@ if ($request->hasSession())
        $userinfo='Вы '.$request->getSession()->get('login');
        $authenticationbtnval='Выйти';
        $askmemcache=$GLOBALS['memcache']->get($request->getSession()->get('login'));
+       $userlogged=true;
     } else {
         $userinfo='';
         $authenticationbtnval='Войти';
         $askmemcache='';
+        $userlogged=false;
     }
 //получаем блоги
 $blogs=$blogloader->doctrine_get_AllBlogs();
-    
+$blogssort=$blogloader->doctrine_get_AllBlogsSort();
+
 if ($GLOBALS['SysValue']['debug']['debug'])
     VarDumper::dump(array('menu'=>$menu,'TwigRenderer'=>$TwigRenderer,
                           'TwigRendererhtml'=>$TwigRendererhtml,
@@ -67,7 +70,9 @@ if ($GLOBALS['SysValue']['debug']['debug'])
                           'Container'=>$Container,
                           'whoAreYou'=>$whoAreYou,
                           'memcache'=>$askmemcache,
-                          'session'=>$request->hasSession()
+                          'session'=>$request->hasSession(),
+                          'blogs'=>$blogs,
+                          'blogssort'=>$blogssort
                          ));
 
 echo $template->render(array('knpmenu'=>$menubuilder->mainMenu($twig,array()),
@@ -77,8 +82,9 @@ echo $template->render(array('knpmenu'=>$menubuilder->mainMenu($twig,array()),
                              'host'=>$request->getClientIp(),
                              'ajaxroutine'=>'/class/ajax/blogsajax.php',
                              'userinfo'=>$userinfo,
-                             'blogs'=>$blogs,
-                             'authenticationbtnval'=>$authenticationbtnval));
+                             'blogs'=>$blogssort,
+                             'authenticationbtnval'=>$authenticationbtnval,
+                             'userlogged'=>$userlogged));
 } else
     echo $GLOBALS['iniFileError'];    
 

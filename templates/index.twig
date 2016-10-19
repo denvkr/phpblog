@@ -73,28 +73,69 @@
     <div class=".col-xs-6 .col-sm-4">
         {% if blogs %}
             {% for blogitem in blogs %}
-            <div id="blogitemblock{{blogitem.blogid}}" blogid="{{blogitem.blogid}}" blogparentid="{{blogitem.blogparentid}}">
-                <img src="{{blogitem.userPhotoUrl}}" width="50" height="50"/>
-                <div name="bloguserinfo">{{blogitem.bloguser}}</div>
-                <div name="blogtext">{{blogitem.blogtext}}</div>
-                <div>создан {{blogitem.create|date('Y-m-d H:i:s')}}</div>
-                <button type="button" blogid="{{blogitem.blogid}}" blogparentid="{{blogitem.blogparentid}}" name="opencommentblogbtn" class="btn btn-sm btn-primary" style="display:inline;">Комментировать</button>
-                <div style="clear:both"></div>
-                <div id="addblogitemblock{{blogitem.blogid}}" blogid="{{blogitem.blogid}}" blogparentid="{{blogitem.blogparentid}}">
-                    <textarea name="blogtext" cols="70" rows="5" style="display:block;"></textarea>
-                    <button type="button" name="addblogbtn" blogid="{{blogitem.blogId}}" blogparentid="{{blogitem.blogparentid}}" class="btn btn-sm btn-primary" style="display:inline;">Отправить</button>
-                </div>
+            <div id="blogitemblock{{blogitem.id}}" blogid="{{blogitem.id}}" blogparentid="{{blogitem.parentid}}" level="{{blogitem.level}}" class="center-block">
+                <table>
+                    <tbody>
+                    <tr>
+                        <td style="width:50px;">
+                            <img src="public/images/question.jpg" width="50" height="50" style="border-radius: 50%;"/>
+                            <div name="bloguserinfo">{{blogitem.bloguser}}</div>
+                            <div>создан {{blogitem.create|date('Y-m-d H:i:s')}}</div>
+                        </td>
+                        <td style="border: 1px solid white !important;width:300px;">
+                            <div name="blogtext">{{blogitem.blogtext}}</div>
+                        </td>
+                        
+                    </tr>
+                    <tr>
+                    <td>
+                    </td>
+                        <td>
+                        {% if userlogged==true %}
+                            <button type="button" blogid="{{blogitem.id}}" blogparentid="{{blogitem.parentid}}" mainroot="{{blogitem.sort}}" name="opencommentblogbtn" class="btn btn-sm btn-primary" style="display:inline;"><i class="glyphicon glyphicon-pencil"></i></button>
+                        {% else %}
+                            <button type="button" blogid="{{blogitem.id}}" blogparentid="{{blogitem.parentid}}" mainroot="{{blogitem.sort}}" name="opencommentblogbtn" class="btn btn-sm btn-primary invisible" style="display:inline;"><i class="glyphicon glyphicon-pencil"></i></button>
+                        {% endif %}
+                        {% if blogitem.level=='root' and userlogged==true %}
+                            <button type="button" blogid="{{blogitem.id}}" blogparentid="{{blogitem.parentid}}" mainroot="{{blogitem.sort}}" name="opencommentblogbtnroot" class="btn btn-sm btn-primary" style="display:inline;"><i class="glyphicon glyphicon-plus"></i></button>
+                        {% endif %}
+                        {% if blogitem.level=='root' and userlogged==false %}
+                            <button type="button" blogid="{{blogitem.id}}" blogparentid="{{blogitem.parentid}}" mainroot="{{blogitem.sort}}" name="opencommentblogbtnroot" class="btn btn-sm btn-primary invisible" style="display:inline;"><i class="glyphicon glyphicon-plus"></i></button>
+                        {% endif %}
+
+                        </td>
+                    </tr>
+                <!--<div style="clear:both"></div>-->
+                <tr>
+                    <td>
+                    </td>
+                    <td>
+                        <div id="addblogitemblock{{blogitem.id}}" blogid="{{blogitem.id}}" blogparentid="{{blogitem.parentid}}" mainroot="{{blogitem.sort}}">
+                            <textarea name="blogtext" cols="70" rows="5" style="display:block;"></textarea>
+                            <button type="button" name="addblogbtn" blogid="{{blogitem.id}}" blogparentid="{{blogitem.parentid}}" mainroot="{{blogitem.sort}}" level="{{blogitem.level}}" class="btn btn-sm btn-primary" style="display:inline;">Отправить</button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+                </table>
             </div>
-            {% endfor %}
+           {% endfor %}
+                {% if userlogged==true %}
+                    <div id="addblogitemblockroot" class="center-block" blogid="0" blogparentid="0">
+                {% else %}
+                    <div id="addblogitemblockroot" class="center-block invisible" blogid="0" blogparentid="0">                        
+                {% endif %}                    
+                    <textarea name="blogtext" cols="70" rows="5" style="display:block;"></textarea>
+                    <button type="button" name="addblogbtn" blogid="0" blogparentid="0" level="root" class="btn btn-sm btn-primary" style="display:inline;">Отправить</button>
+                </div>            
         {% else %}
-            <div class="warninginfo">Пока нет ни одного блога.</div>
-                <div id="addblogitemblock0" blogid="0" blogparentid="0" style="display:block;">
+            <div class="center-block warninginfo">Пока нет ни одной записи.</div>
+                <div id="addblogitemblock0" class="center-block" blogid="0" blogparentid="0">
                     <textarea name="blogtext" cols="70" rows="5" style="display:block;"></textarea>
                     <button type="button" name="addblogbtn" blogid="0" blogparentid="0" class="btn btn-sm btn-primary" style="display:inline;">Отправить</button>
                 </div>
-
         {% endif %}
-            <input id="datapartnum" type="hidden" value="1"/>
+        <input id="datapartnum" type="hidden" value="1"/>
 
     </div>        
 </div>   

@@ -4,7 +4,7 @@ global $SysValue;
 $GLOBALS['iniFileError']='Ошибка инициализации конфигурационного файла.';
 $GLOBALS['mysqlConnectionError']='Ошибка соединения с базой даных.';
 $GLOBALS['mysqlDBError']='Ошибка, отсутсвует база даных.';
-$GLOBALS['symfonydebug']=true;
+$GLOBALS['symfonydebug']=false;
 //вариант работы через логику symfony начало инициализации
 //require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/app/autoload.php';
 //require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/app/AppCache.php';
@@ -36,8 +36,8 @@ $GLOBALS['memcache'] = new \Memcache;
 $GLOBALS['memcache']->connect('127.0.0.1', 11211) or exit("Невозможно подключиться к серверу Memcached");
  
 $version = $GLOBALS['memcache']->getVersion();
-
-VarDumper::dump(array($version));
+if ($GLOBALS['symfonydebug'])
+    VarDumper::dump(array($version));
 
 require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/class/blogloader.php';
 //require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/class/routes.php';

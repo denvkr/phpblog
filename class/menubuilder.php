@@ -27,8 +27,8 @@ class menubuilder implements ContainerAwareInterface{
         $options=array('depth'=>1);
         $Matcher=new Matcher();
         $munulocal=$MenuFactory->createItem('root');
-        $munulocal->addChild('Home', array('route' => 'blogs','label'=>'Home','uri'=>'/blogs'))->setAttribute('class','navbar-brand');
-        $munulocal->addChild('Admin\'ka', array('route' => 'adminblogs','label'=>'Admin\'ka','uri'=>'/adminblogs','class'=>'navbar-brand'))->setAttribute('class','navbar-brand');
+        $munulocal->addChild('Home', array('route' => 'blogs','label'=>'Блоги','uri'=>'/'))->setAttribute('class','navbar-brand');
+        $munulocal->addChild('Admin\'ka', array('route' => 'adminblogs','label'=>'Админка','uri'=>'/adminblogs','class'=>'navbar-brand'))->setAttribute('class','navbar-brand');
 
         $TwigRenderer=new TwigRenderer($twig,'knp_menu.html.twig',$Matcher,array('depth'=>1));
         $TwigRendererhtml=$TwigRenderer->render($munulocal);

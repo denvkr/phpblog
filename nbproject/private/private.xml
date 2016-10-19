@@ -5,14 +5,16 @@
         <group name="domains">
             <file>file:/C:/OpenServer23/domains/phpblog/class/blogloader.php</file>
             <file>file:/C:/OpenServer23/domains/phpblog/templates/blogs.php</file>
+            <file>file:/C:/OpenServer23/domains/phpblog/class/routes.php</file>
             <file>file:/C:/OpenServer23/domains/phpblog/class/ajax/blogsajax.php</file>
-            <file>file:/C:/OpenServer23/domains/phpblog/class/dbroutine.php</file>
+            <file>file:/C:/OpenServer23/domains/phpblog/public/css/style.css</file>
+            <file>file:/C:/OpenServer23/domains/phpblog/class/parseini.php</file>
             <file>file:/C:/OpenServer23/domains/phpblog/templates/jsbase.html.twig</file>
             <file>file:/C:/OpenServer23/domains/phpblog/index.php</file>
             <file>file:/C:/OpenServer23/domains/phpblog/class/routeprocessor.php</file>
-            <file>file:/C:/OpenServer23/domains/phpblog/templates/regmenubase.html.twig</file>
             <file>file:/C:/OpenServer23/domains/phpblog/templates/index.twig</file>
             <file>file:/C:/OpenServer23/domains/phpblog/config/config.ini</file>
+            <file>file:/C:/OpenServer23/domains/phpblog/class/menubuilder.php</file>
         </group>
     </open-files>
 </project-private>

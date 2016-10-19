@@ -1,4 +1,5 @@
-{% block baseDocumentReady %} 
+{% block baseDocumentReady %}
+$(document).ready(function() {
     //аутентификация
     $('#authenticationbtn').click(function(){
         var oReq = new XMLHttpRequest();
@@ -8,14 +9,16 @@
                         //console.log(JSON.parse(oReq.responseText));
                         if (oReq.readyState === 4 && oReq.status === 200) {
                             response=JSON.parse(oReq.response);
-                            console.log(response.hasuser);
-                            if (Number(response.hasuser)===1){
+                            console.log(response);
+                            if (response.hasuser===1){
                                 console.log('user logged');
                                 //показываем пользователя
                                 $('#userinfo').text('Вы '+$('input[name="_username"]').eq(0).val());
                                 $('#authenticationbtn').text('Выйти');
+                                $('button[name^="opencommentblogbtn"],#addblogitemblockroot').toggleClass('invisible');
                                 return 1;
                             } else
+                                $('#userinfo').text('пользователь не существует/неправильный пароль');
                                 console.log('wrong user');
                                 return 0;
                         }
@@ -36,6 +39,7 @@
                                 //показываем пользователя
                                 $('#userinfo').text('');
                                 $('#authenticationbtn').text('Войти');
+                                $('button[name^="opencommentblogbtn"],#addblogitemblockroot').toggleClass('invisible');
                                 return 1;
                             } else
                                 console.log('wrong user dislogged');
@@ -49,7 +53,7 @@
         }
  
     });
-    //отправка первого поста
+    //отправка поста
     $('button[name="addblogbtn"]').each(function(index){
         var oReq = new XMLHttpRequest();
         $(this).click(function(){
@@ -57,8 +61,8 @@
                         //console.log(JSON.parse(oReq.responseText));
                         if (oReq.readyState === 4 && oReq.status === 200) {
                             response=JSON.parse(oReq.response);
-                            console.log(response.blogwasadded);
-                            if (Number(response.blogwasadded)===1){
+                            console.log(response);
+                            if (response.blogwasadded===1){
                                 console.log('blog was posted');
                                 return 1;
                             } else
@@ -69,13 +73,35 @@
 
             oReq.open("POST", "{{ajaxroutine}}",true);
             oReq.setRequestHeader("Content-Type", "application/json");
-            if ($(this).prev('textarea[name="blogtext"]').eq(0).val()!='')
-                oReq.send(JSON.stringify({type:"addblog",blogtext:$(this).prev('textarea[name="blogtext"]').eq(0).val(),blogid:$(this).attr("blogid"),blogparentid:$(this).attr("blogparentid")}));
+            console.log($(this).parent().attr("blogid"));
+            if ($(this).prev('textarea[name="blogtext"]').eq(0).val()!=''){
+                if ($(this).attr('level')=='root' && Number($(this).attr('blogparentid'))!=0)
+                    oReq.send(JSON.stringify({type:"addblog",blogtext:$(this).prev('textarea[name="blogtext"]').eq(0).val(),blogid:$(this).attr("blogid"),blogparentid:$(this).attr("blogparentid"),mainroot:$(this).attr("blogid")}));
+                if ($(this).attr('level')=='root' && Number($(this).attr('blogparentid'))==0)
+                    oReq.send(JSON.stringify({type:"addblog",blogtext:$(this).prev('textarea[name="blogtext"]').eq(0).val(),blogid:$(this).attr("blogid"),blogparentid:$(this).attr("blogid"),mainroot:$(this).attr("blogid")}));
+                if ($(this).attr('level')=='child')
+                    oReq.send(JSON.stringify({type:"addblog",blogtext:$(this).prev('textarea[name="blogtext"]').eq(0).val(),blogid:$(this).attr("blogid"),blogparentid:$(this).attr("blogid"),mainroot:$(this).attr("mainroot")}));
+
+            }
         });
     });
+
     $('button[name="opencommentblogbtn"]').each(function(index){
         $(this).click(function(){
-            $(this).next().next('div[id^="addblogitemblock"]').toggleClass('unhidden');
+            console.log('div[id="addblogitemblock'+$(this).attr('blogid')+'"]',$('div[id="blogitemblock'+$(this).attr('blogid')+'"]').css('height'));
+            if ($('div[id="blogitemblock'+$(this).attr('blogid')+'"]').css('height')==='270px'){
+                $('div[id="blogitemblock'+$(this).attr('blogid')+'"]').css('height','150px');
+            } else if ($('div[id="blogitemblock'+$(this).attr('blogid')+'"]').css('height')==='150px') {
+                $('div[id="blogitemblock'+$(this).attr('blogid')+'"]').css('height','270px');
+            }
+            console.log('div[id="addblogitemblock'+$(this).attr('blogid')+'"]',$('div[id="blogitemblock'+$(this).attr('blogid')+'"]').css('height'));
+            $('div[id="addblogitemblock'+$(this).attr('blogid')+'"]').toggleClass('show');
         });        
     });
+    $('button[name="opencommentblogbtnroot"]').eq(0).click(function(){
+            //console.log('div[id="addblogitemblock'+$(this).attr('blogid')+'"]',$('div[id="blogitemblock'+$(this).attr('blogid')+'"]').css('height'));
+            //$('div[id="addblogitemblockroot"]').toggleClass('show');
+            location.hash = "#addblogitemblockroot";
+    });
+});
 {% endblock baseDocumentReady %}

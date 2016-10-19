@@ -28,7 +28,7 @@ if (isset($parameters['type'])){
     if ($parameters['type']=="user_authentication"){
         if ($memcache->get($parameters['user'])!==false) {
             $userinfo=$memcache->get($parameters['user']);
-            if (intval($userinfo[2])===1){
+            if (intval($userinfo[3])===1 && $userinfo[2]===$parameters['password']){
                $result=array('hasuser'=>1);
                 if ($request->hasSession()) {
                     //пишем обновленные данные в базу
@@ -36,14 +36,19 @@ if (isset($parameters['type'])){
                         $request->getSession()->set('login',$userinfo[0]);
                         $request->getSession()->set('login_id',$userinfo[1]);
                     }
-                }        
-            } else
-              $result=array('hasuser'=>0);
+                } else {
+                    $result=array('hasuser'=>0);
+                }       
+            } else{
+                $result=$blogloader->doctrine_get_user($parameters['user'],$parameters['password']);
+                $memcache->set($parameters['user'], array($parameters['user'],$result['id'],$parameters['password'],$result['hasuser']), false, 0);
+            }
         } else {
             $result=$blogloader->doctrine_get_user($parameters['user'],$parameters['password']);
-            $memcache->set($parameters['user'], array($parameters['user'],$result[0]['id'],$result[0]['hasuser']), false, 0);
+            $memcache->set($parameters['user'], array($parameters['user'],$result['id'],$parameters['password'],$result['hasuser']), false, 0);
         }
-        //VarDumper::dump(array($memcache->get($parameters['user'],$request->getSession())));
+        if ($GLOBALS['SysValue']['debug']['debug'])
+            VarDumper::dump(array('memcacheajax'=>$memcache->get($parameters['user'],$request->getSession()),'resultajax'=>$result));
         // Формируем результат
         echo json_encode($result);//json_encode($request->attributes->all());
 
@@ -52,6 +57,11 @@ if (isset($parameters['type'])){
     if ($parameters['type']=="user_dislogged"){
 
         if ($request->hasSession()) {
+            //if ($request->getSession()->has('login') && $request->getSession()->has('login_id')){
+            //    if ($memcache->get($request->getSession()->has('login'))!==false) {
+            //       $memcache->delete($request->getSession()->has('login'));
+            //    }
+            //}
             $request->getSession()->invalidate();
             $result=array('dislogged'=>1);                    
         } else {
@@ -69,9 +79,10 @@ if (isset($parameters['type'])){
         if ($request->hasSession()) {
             //пишем обновленные данные в базу
             if ($request->getSession()->has('login') && $request->getSession()->has('login_id')){
-                $result=$blogloader->doctrine_add_post($parameters['blogparentid'],$request->getSession()->has('login'),
-                                                       $request->getSession()->has('login_id'),
-                                                       $parameters['blogtext']);
+                $result=$blogloader->doctrine_add_post($parameters['blogparentid'],$request->getSession()->get('login'),
+                                                       $request->getSession()->get('login_id'),
+                                                       $parameters['blogtext'],
+                                                       $parameters['mainroot']);
                 $result=array('blogwasadded'=>$result); 
             } else {
                 $result=array('blogwasadded'=>0);

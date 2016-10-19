@@ -2,9 +2,36 @@
     font-size: 19px;
     font-weight: bold;
 }
-.unhidden{
-    display:block!important;
+#addblogitemblockroot{
+    display:block;
+    position:relative;
+    width:400px;
+    height: 150px;
 }
+
 div[id^="addblogitemblock"]{
     display:none;
+}
+div[id="addblogitemblock0"]{
+    display:block;
+    position:relative;
+    width:400px;
+    height: 150px;
+}
+.warninginfo{
+    display:block;
+    position:relative;
+    width:400px;
+    height: 20px;    
+}
+div[id^="addblogitemblock"]>textarea{
+    width:300px;
+}
+div[id^="blogitemblock"][level="root"]{
+    position:relative;
+    width:400px;
+    height: 150px;
+}
+div[id^="blogitemblock"][level="child"]{
+    margin-left:45%;
 }
