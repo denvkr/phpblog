@@ -36,7 +36,7 @@ security:
 
             # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
             form_login:
-                login_path: /demo/login
+                login_path: /adminblogs/adminblogs
                 check_path: /demo/login_check
                 
         secured_area:

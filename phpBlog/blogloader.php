@@ -6,15 +6,18 @@ namespace phpBlog;
  * and open the template in the editor.
  */
 //Symfony\Component\VarDumper\VarDumper::dump(array(filter_input(INPUT_SERVER,'DOCUMENT_ROOT')));
-require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/class/parseini.php';
-require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/class/dbroutine.php';
+//require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/phpBlog/parseini.php';
+//require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/phpBlog/dbroutine.php';
+//require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/phpBlog/phpBlogUser.php';
 
 use phpBlog\parseini as parseini;
 use phpBlog\dbroutine as dbroutine;
+use phpBlog\phpBlogUser;
 use Doctrine\DBAL\DriverManager;
 use \Doctrine\DBAL\Query\QueryBuilder;
 use \Symfony\Component\VarDumper\VarDumper;
-
+use Symfony\Component\Security\Core\Role\Role;
+use \Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 /**
  * Description of blogloader
  *
@@ -29,6 +32,8 @@ class blogloader {
     private $doctrnconfig;
     private $connectionParams;
     private $doctrnconn;
+    private $phpBlogUser;
+    
     public function __construct(){
         //глобально открываем содержимое конфиг файла
         if (!isset($GLOBALS['SysValue']))
@@ -41,7 +46,9 @@ class blogloader {
         $this->doctrnconfig->setAutoCommit(true);
         $this->connectionParams=$this->dbroutine->getConnectionParams();
         $this->doctrnconn = DriverManager::getConnection($this->connectionParams, $this->doctrnconfig);
-        $qb = $this->doctrnconn->executeQuery('SET NAMES utf8mb4');
+        $this->doctrnconn->executeQuery('SET NAMES utf8mb4');
+        $this->phpBlogUser= new phpBlogUser();
+
     }
     
     public function getSessionInfo(){
@@ -68,7 +75,7 @@ class blogloader {
    public function doctrine_get_user($user=null,$pwd=null) {
        if (!is_null($user) && !is_null($pwd)){
              $qb = $this->doctrnconn->createQueryBuilder()
-             ->select('count(u.id) hasuser,u.id id')
+             ->select('count(u.id) hasuser,u.id id,u.user_role')
              ->from('fos_user', 'u')
                      ->where('u.u=:usr AND u.p=:pwd');
              $qb->setParameter('usr', $user);
@@ -77,8 +84,11 @@ class blogloader {
              $result=$results->fetchAll();
              $hasuser=$result[0]['hasuser'];
              $id=$result[0]['id'];
-             if ($GLOBALS['SysValue']['debug']['debug'])
-                 VarDumper::dump(array('conn'=>$this->doctrnconn,'qb'=>$qb,'result'=>$result,'hasuser'=>$hasuser,'id'=>$id));
+            $role = new Role($result[0]['user_role']);
+            $UsernamePasswordToken=new UsernamePasswordToken( $this->phpBlogUser,$id,'database',array($role->getRole()));
+
+             //if ($GLOBALS['SysValue']['debug']['debug'])
+             //    VarDumper::dump(array('conn'=>$this->doctrnconn,'qb'=>$qb,'result'=>$result,'hasuser'=>$hasuser,'id'=>$id,'UsernamePasswordToken'=>$UsernamePasswordToken));
 
              $result=array('hasuser'=>(int)$hasuser,'id'=>(int)$id);
              return $result;
@@ -86,6 +96,30 @@ class blogloader {
            return 0;           
        }
    }
+   //сохраняем пользователя в БД
+   public function doctrine_set_user($user=null,$pwd=null) {
+       if (!is_null($user) && !is_null($pwd)){
+            if ($GLOBALS['SysValue']['debug']['debug'])
+                VarDumper::dump(array('doctrine_get_user[id]'=>$this->doctrine_get_user($user,$pwd)['id']));
+            //проверяем есть ли такой пользователь в базе
+            if(empty($this->doctrine_get_user($user,$pwd)['id'])){
+                $qb = $this->doctrnconn->createQueryBuilder()->insert('fos_user')->values(array('u'=>':usr','p'=>':pwd'));
+                $qb->setParameter('usr', $user);
+                $qb->setParameter('pwd', $pwd);
+                $results = $qb->execute();
+                
+                 //if ($GLOBALS['SysValue']['debug']['debug'])
+                 //    VarDumper::dump(array('conn'=>$this->doctrnconn,'qb'=>$qb,'result'=>$results));
+
+                 $result=$this->doctrine_get_user($user,$pwd);                
+            } else
+                $result=array('hasuser'=>0,'id'=>0);
+             return $result;
+       } else {
+           return 0;   
+       }
+   }
+
    //получение блогов 
    //вариант с простой сортировкой
    public function doctrine_get_AllBlogs(){
@@ -204,5 +238,4 @@ class blogloader {
             return $retval;
        }
    }
-
 }

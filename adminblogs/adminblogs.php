@@ -1,6 +1,6 @@
 <?php
 require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/vendor/autoload.php';
-require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/class/menubuilder.php';
+require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/phpBlog/menubuilder.php';
 use phpBlog\menubuilder;
 use phpBlog\blogloader as blogloader;
 use Symfony\Component\HttpKernel\Kernel;
@@ -9,12 +9,12 @@ use Symfony\Component\Debug\Debug;
 use Symfony\Component\VarDumper\VarDumper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/class/blogloader.php';
+require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/phpBlog/blogloader.php';
 
 //require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/index.php';
 $request = Request::createFromGlobals();
 $request->create(filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/adminblogs','GET');
-require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/class/routeprocessor.php';
+require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/phpBlog/routeprocessor.php';
 if ($request->get('_route')=='adminblogs'){
     //echo 'Админка блога';
     $PathiniFile = filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/config/config.ini';

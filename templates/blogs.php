@@ -10,6 +10,10 @@ use Symfony\Component\VarDumper\VarDumper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use \Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Role\Role;
+
+use phpBlog\phpBlogUser;
 //$request = Request::create('http://phpblog/');
 
 $PathiniFile = filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/config/config.ini';
@@ -53,11 +57,32 @@ if ($request->hasSession())
        $authenticationbtnval='Выйти';
        $askmemcache=$GLOBALS['memcache']->get($request->getSession()->get('login'));
        $userlogged=true;
+       /*
+        * используем компоненты Symfony Security создаем токен 
+        */
+        /**
+         * Constructor.
+         *
+         * @param string|object            $user        The username (like a nickname, email address, etc.), or a UserInterface instance or an object implementing a __toString method
+         * @param string                   $credentials This usually is the password of the user
+         * @param string                   $providerKey The provider key
+         * @param RoleInterface[]|string[] $roles       An array of roles
+         *
+         * @throws \InvalidArgumentException
+         */
+       $phpBlogUser= new phpBlogUser();
+       $role = new Role('ROLE_USER');
+       $UsernamePasswordToken=new UsernamePasswordToken( $phpBlogUser,$request->getSession()->get('login_id'),'session',array($role->getRole()));
+       //$UsernamePasswordToken->setUser($request->getSession()->get('login_id'));
+       //$UsernamePasswordToken->setAttribute('login', $request->getSession()->get('login'));
+       //$UsernamePasswordToken->setAttribute('login_id', $request->getSession()->get('login_id'));
+       
     } else {
         $userinfo='';
         $authenticationbtnval='Войти';
         $askmemcache='';
         $userlogged=false;
+        $UsernamePasswordToken=null;
     }
 //получаем блоги
 $blogs=$blogloader->doctrine_get_AllBlogs();
@@ -72,7 +97,9 @@ if ($GLOBALS['SysValue']['debug']['debug'])
                           'memcache'=>$askmemcache,
                           'session'=>$request->hasSession(),
                           'blogs'=>$blogs,
-                          'blogssort'=>$blogssort
+                          'blogssort'=>$blogssort,
+                          'UsernamePasswordToken'=>$UsernamePasswordToken,
+                          //'phpBlogUser'=>$phpBlogUser->getUsername()
                          ));
 
 echo $template->render(array('knpmenu'=>$menubuilder->mainMenu($twig,array()),
@@ -80,7 +107,7 @@ echo $template->render(array('knpmenu'=>$menubuilder->mainMenu($twig,array()),
                              'bootstrap_theme'=>'bootstrap-theme-slate',
                              'visitor_count'=>$visitorCount,
                              'host'=>$request->getClientIp(),
-                             'ajaxroutine'=>'/class/ajax/blogsajax.php',
+                             'ajaxroutine'=>'/phpBlog/ajax/blogsajax.php',
                              'userinfo'=>$userinfo,
                              'blogs'=>$blogssort,
                              'authenticationbtnval'=>$authenticationbtnval,
