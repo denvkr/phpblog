@@ -3,19 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group name="domains">
-            <file>file:/C:/OpenServer23/domains/phpblog/phpBlog/user.php</file>
-            <file>file:/C:/OpenServer23/domains/phpblog/phpBlog/ajax/blogsajax.php</file>
-            <file>file:/C:/OpenServer23/domains/phpblog/templates/jsbase.html.twig</file>
-            <file>file:/C:/OpenServer23/domains/phpblog/app/config/security.yml</file>
-            <file>file:/C:/OpenServer23/domains/phpblog/phpBlog/blogloader.php</file>
-            <file>file:/C:/OpenServer23/domains/phpblog/phpBlog/phpBlogUser.php</file>
-            <file>file:/C:/OpenServer23/domains/phpblog/phpBlog/dbconnect.php</file>
-            <file>file:/C:/OpenServer23/domains/phpblog/templates/blogs.php</file>
+            <file>file:/C:/OpenServer23/domains/phpblog/class/blogloader.php</file>
             <file>file:/C:/OpenServer23/domains/phpblog/phpBlog/routeprocessor.php</file>
             <file>file:/C:/OpenServer23/domains/phpblog/index.php</file>
-            <file>file:/C:/OpenServer23/domains/phpblog/phpBlog/dbroutine.php</file>
-            <file>file:/C:/OpenServer23/domains/phpblog/adminblogs/adminblogs.php</file>
+            <file>file:/C:/OpenServer23/domains/phpblog/phpBlog/parseini.php</file>
+            <file>file:/C:/OpenServer23/domains/phpblog/phpBlog/blogloader.php</file>
             <file>file:/C:/OpenServer23/domains/phpblog/config/config.ini</file>
+            <file>file:/C:/OpenServer23/domains/phpblog/src/BlogBundle/DependencyInjection/BlogExtension.php</file>
         </group>
     </open-files>
 </project-private>

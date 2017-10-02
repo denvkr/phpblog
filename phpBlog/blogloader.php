@@ -6,9 +6,9 @@ namespace phpBlog;
  * and open the template in the editor.
  */
 //Symfony\Component\VarDumper\VarDumper::dump(array(filter_input(INPUT_SERVER,'DOCUMENT_ROOT')));
-//require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/phpBlog/parseini.php';
-//require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/phpBlog/dbroutine.php';
-//require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/phpBlog/phpBlogUser.php';
+require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/phpBlog/parseini.php';
+require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/phpBlog/dbroutine.php';
+require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/phpBlog/phpBlogUser.php';
 
 use phpBlog\parseini as parseini;
 use phpBlog\dbroutine as dbroutine;
@@ -191,6 +191,7 @@ class blogloader {
                  VarDumper::dump(array('conn'=>$this->doctrnconn,'qb'=>$qb,'results'=>$results));
              return $results;  
    }
+   //собираем массив для вывода блогов
    private function buildBlogArray($results,$stage,$retval=array(),$rootkeysarr=array(),$childkeysarr=array(),$parentid=0){
        if (!empty($results[$stage])){
            //корень

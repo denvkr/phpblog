@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\Config\FileLocator;
 
 /**
- * Description of IpoetryExtension
+ * Description of blogExtension
  *
  * @author d.krasavin
  */

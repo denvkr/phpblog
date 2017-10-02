@@ -157,6 +157,7 @@ class blogloader {
                  VarDumper::dump(array('conn'=>$this->doctrnconn,'qb'=>$qb,'results'=>$results));
              return $results;  
    }
+   //собираем массив для вывода блогов
    private function buildBlogArray($results,$stage,$retval=array(),$rootkeysarr=array(),$childkeysarr=array(),$parentid=0){
        if (!empty($results[$stage])){
            //корень
@@ -164,7 +165,7 @@ class blogloader {
                 //проверяем если уже есть такой элемент
                 if (in_array((string)$results[$stage]['id'],$rootkeysarr)===false){
                    $rootkeysarr[]=$results[$stage]['id'];
-                   $retval[]=array_slice($results[$stage] , 0,8);
+                   $retval[]=array_slice($results[$stage] , 0, 8);
                 }
                 //потомки от корня
                 if ((int)$results[$stage]['childparentid']==(int)$results[$stage]['id']  && !empty($results[$stage]['childparentid'])){

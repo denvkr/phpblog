@@ -9,14 +9,47 @@ use Symfony\Component\Debug\Debug;
 use Symfony\Component\VarDumper\VarDumper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Symfony\Component\Routing\RouteCollection;
+
 require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/phpBlog/blogloader.php';
 
 //require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/index.php';
 $request = Request::createFromGlobals();
 $request->create(filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/adminblogs','GET');
 require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/phpBlog/routeprocessor.php';
+
+$routes = new RouteCollection();
+$route=new Route('/adminblogs',array('_controller' =>'phpBlog\routeprocessor::render_template'));
+$routes->add('adminblogs',$route);
+
+VarDumper::dump($routes);
+
+$context = new RequestContext;
+$context->fromRequest($request);
+VarDumper::dump($context);
+
+$matcher = new UrlMatcher($routes, $context);
+
+if (empty($request->getBaseUrl()))
+    $url=$request->getPathInfo();
+else
+    $url=$request->getBaseUrl();
+extract($matcher->match($url), EXTR_SKIP);
+//ob_start();
+//include sprintf(filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/templates/%s.php', $_route);
+//$response = new Response(ob_get_clean());
+$request->attributes->add($matcher->match($url));
+
+echo 'Админка блога';
+
+//if ($GLOBALS['SysValue']['debug']['debug']){
+    VarDumper::dump($request,'request');
+//}
+
 if ($request->get('_route')=='adminblogs'){
-    //echo 'Админка блога';
     $PathiniFile = filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/config/config.ini';
 
     //если конфиг файл существует, 

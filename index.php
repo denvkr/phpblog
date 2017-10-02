@@ -4,7 +4,7 @@ global $SysValue;
 $GLOBALS['iniFileError']='Ошибка инициализации конфигурационного файла.';
 $GLOBALS['mysqlConnectionError']='Ошибка соединения с базой даных.';
 $GLOBALS['mysqlDBError']='Ошибка, отсутсвует база даных.';
-$GLOBALS['symfonydebug']=true;
+$GLOBALS['symfonydebug']=false;
 //вариант работы через логику symfony начало инициализации
 //require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/app/autoload.php';
 //require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/app/AppCache.php';
@@ -43,7 +43,7 @@ $GLOBALS['memcache']->connect('127.0.0.1', 11211) or exit("Невозможно 
  
 $version = $GLOBALS['memcache']->getVersion();
 if ($GLOBALS['symfonydebug'])
-    VarDumper::dump(array($version));
+    VarDumper::dump(array('версия memcache'=>$version));
  
 //$autoloader = new \phpBlog\autoloader();
  
@@ -69,7 +69,7 @@ $ClassLoader->addClassMap($classmap);
 
 $blogloader=new phpBlog\blogloader();
 $routeprocessor=new phpBlog\routeprocessor();
-
+$GLOBALS['routeprocessor']=$routeprocessor;
 //var_dump(spl_autoload_functions());
 //require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/class/blogloader.php';
 //require_once filter_input(INPUT_SERVER,'DOCUMENT_ROOT').'/class/routes.php';
